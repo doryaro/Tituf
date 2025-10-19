@@ -1,0 +1,3 @@
+[submodule "Tituf/vendor/spdlog"]
+	path = Tituf/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git

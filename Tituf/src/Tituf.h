@@ -4,7 +4,7 @@
 
 
 #include "Tituf/Application.h"	
-
+#include "Tituf/Log.h"	
 
 
 
