@@ -1,3 +1,4 @@
+#include "tfpch.h"
 #include "Log.h"
 namespace Tituf
 {

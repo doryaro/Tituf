@@ -10,3 +10,4 @@
 	#error Tituf only supports Windows!	
 #endif // TITUF_PLATFORM_WINDOWS
 
+#define BIT(x) (1 << x)

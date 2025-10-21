@@ -1,7 +1,7 @@
 #pragma once
-#include <memory>
 #include "Core.h"
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 namespace Tituf
 {
@@ -35,11 +35,11 @@ namespace Tituf
 #define TF_CORE_FATAL(...)    ::Tituf::Log::GetCoreLogger()->fatal(__VA_ARGS__)	
   
 // Client log macros	
-#define TF_Client_TRACE(...)    ::Tituf::Log::GetClientLogger()->trace(__VA_ARGS__)	
-#define TF_Client_INFO(...)     ::Tituf::Log::GetClientLogger()->info(__VA_ARGS__)	
-#define TF_Client_WARN(...)     ::Tituf::Log::GetClientLogger()->warn(__VA_ARGS__)	
-#define TF_Client_ERROR(...)    ::Tituf::Log::GetClientLogger()->error(__VA_ARGS__)
-#define TF_Client_FATAL(...)    ::Tituf::Log::GetClientLogger()->fatal(__VA_ARGS__)	
+#define TF_TRACE(...)    ::Tituf::Log::GetClientLogger()->trace(__VA_ARGS__)	
+#define TF_INFO(...)     ::Tituf::Log::GetClientLogger()->info(__VA_ARGS__)	
+#define TF_WARN(...)     ::Tituf::Log::GetClientLogger()->warn(__VA_ARGS__)	
+#define TF_ERROR(...)    ::Tituf::Log::GetClientLogger()->error(__VA_ARGS__)
+#define TF_FATAL(...)    ::Tituf::Log::GetClientLogger()->fatal(__VA_ARGS__)	
 
 
 

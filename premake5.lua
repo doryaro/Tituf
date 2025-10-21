@@ -14,11 +14,15 @@ workspace "Tituf"
 project "Tituf"
 	location "Tituf"
 	kind "SharedLib"	
-	language "C++"
+	language 
+	"C++"
 	cppdialect "C++20"	
 	targetdir("bin/" .. outputdir .. "/%{prj.name}")
 	objdir("bin-int/" .. outputdir .. "/%{prj.name}")	
 	
+	pchheader "tfpch.h"
+	pchsource "Tituf/src/tfpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -27,7 +31,8 @@ project "Tituf"
 
 	-- common include dirs for all configurations
 	includedirs 
-	{	
+	{	  
+		"%{prj.name}/src",    
 		"%{prj.name}/vendor/spdlog/include"
 	}
 

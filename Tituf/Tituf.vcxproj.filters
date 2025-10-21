@@ -4,6 +4,9 @@
     <Filter Include="Tituf">
       <UniqueIdentifier>{319B2A0E-9DAF-52BF-6631-F61ED2044FF0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tituf\Event">
+      <UniqueIdentifier>{42FD1D37-AEB2-962C-37A7-9003A35B8D30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tituf.h" />
@@ -16,9 +19,22 @@
     <ClInclude Include="src\Tituf\EntryPoint.h">
       <Filter>Tituf</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tituf\Event\ApplicationEvent.h">
+      <Filter>Tituf\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Event\Event.h">
+      <Filter>Tituf\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Event\KeyEvent.h">
+      <Filter>Tituf\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Event\MouseEvent.h">
+      <Filter>Tituf\Event</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tituf\Log.h">
       <Filter>Tituf</Filter>
     </ClInclude>
+    <ClInclude Include="src\tfpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Tituf\Application.cpp">
@@ -27,5 +43,6 @@
     <ClCompile Include="src\Tituf\Log.cpp">
       <Filter>Tituf</Filter>
     </ClCompile>
+    <ClCompile Include="src\tfpch.cpp" />
   </ItemGroup>
 </Project>
