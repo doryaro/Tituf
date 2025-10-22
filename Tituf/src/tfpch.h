@@ -16,5 +16,6 @@
 
 #ifdef TF_PLATFORM_WINDOWS
 	#include <Windows.h>
+	#include "Window/TFWindow.h"
 #endif
 

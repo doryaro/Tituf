@@ -7,6 +7,9 @@
     <Filter Include="Tituf\Event">
       <UniqueIdentifier>{42FD1D37-AEB2-962C-37A7-9003A35B8D30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{3DEA79DA-298C-A4B0-1247-B804FE872B01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tituf.h" />
@@ -34,6 +37,9 @@
     <ClInclude Include="src\Tituf\Log.h">
       <Filter>Tituf</Filter>
     </ClInclude>
+    <ClInclude Include="src\Window\TFWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
     <ClInclude Include="src\tfpch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +48,9 @@
     </ClCompile>
     <ClCompile Include="src\Tituf\Log.cpp">
       <Filter>Tituf</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window\TFWindow.cpp">
+      <Filter>Window</Filter>
     </ClCompile>
     <ClCompile Include="src\tfpch.cpp" />
   </ItemGroup>
