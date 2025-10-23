@@ -54,7 +54,7 @@ namespace Tituf {
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				//m_Event.m_Handled = func(*(T*)&m_Event);
+				//TF_CORE_TRACE("Dispatching event: {0}", m_Event.GetName());
 				m_Event.m_Handled = func(static_cast<T&>(m_Event));
 
 				return true;

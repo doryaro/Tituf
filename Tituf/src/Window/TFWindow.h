@@ -15,9 +15,30 @@ class TFWindow
 	TFWindow& operator=(const TFWindow& other) = delete;
 	~TFWindow();
 	  
-	bool ProcessMessages();
+	bool ProcessMessages();   
+	using EventAppCallbackFn = std::function<void(Tituf::Event&)>;
+	using EventKeyCallbackFn = std::function<void(Tituf::Event&)>;
+	using EventMouseCallbackFn = std::function<void(Tituf::Event&)>;
+
+	void SetAppEventCallback(const EventAppCallbackFn& callback);
+	void SetKeyEventCallback(const EventKeyCallbackFn& callback);
+	void SetMouseEventCallback(const EventMouseCallbackFn& callback);
+
 private:
 	HINSTANCE m_hInstance;
 	HWND m_hWnd;
+
+	struct WindowData
+	{
+		std::string Title;
+		unsigned int Width;
+		unsigned int Height;
+		EventAppCallbackFn EventAppCallback;
+		EventMouseCallbackFn EventMouseCallback;
+		EventKeyCallbackFn EventKeyCallback;
+	};
+	WindowData m_Data;
+public:
+	inline WindowData& GetData() {return m_Data;}
 };
   
