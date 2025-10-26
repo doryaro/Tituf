@@ -12,6 +12,10 @@ workspace "Tituf"
 
 	IncludeDir = {}
 	IncludeDir["Glad"] = "Tituf/vendor/Glad/include"
+	includedirs
+	{
+		"%{IncludeDir.Glad}"
+	}
 
 
 	include "Tituf/vendor/Glad"
@@ -28,6 +32,12 @@ project "Tituf"
 	
 	pchheader "tfpch.h"
 	pchsource "Tituf/src/tfpch.cpp"
+	
+	links
+	{
+		"Glad",
+		"opengl32.lib"
+	}
 
 	files
 	{
@@ -43,11 +53,7 @@ project "Tituf"
 		"%{IncludeDir.Glad}"
 	}
 
-	links
-	{
-		"Glad",
-		"opengl32.lib"
-	}
+
 
 	-- common Windows-specific settings (applies to all configurations)
 	filter "system:windows"
@@ -101,7 +107,8 @@ project "Sandbox"
 	includedirs
 	{	
 		"Tituf/vendor/spdlog/include",
-		"Tituf/src"
+		"Tituf/src", 
+		"Tituf/vendor/Glad/include"
 	}
 
 	links

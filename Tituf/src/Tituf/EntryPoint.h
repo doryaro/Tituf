@@ -1,6 +1,5 @@
 #pragma once
 #ifdef TF_PLATFORM_WINDOWS
-   
 extern Tituf::Application* Tituf::CreateApplication();
 
 

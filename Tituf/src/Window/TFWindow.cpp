@@ -1,6 +1,5 @@
 #include "tfpch.h"
 #include "TFWindow.h"
-#include "glad/glad.h" 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -188,6 +187,7 @@ void TFWindow::SetMouseEventCallback(const EventMouseCallbackFn& callback)
     m_Data.EventMouseCallback = callback;
 }
 
+#include "glad/glad.h" 
 
 
 TFWindow::TFWindow()
@@ -230,8 +230,7 @@ TFWindow::TFWindow()
 		this
 	);
 	ShowWindow(m_hWnd, SW_SHOW);
-
-
+     
     HDC hdc = GetDC(m_hWnd);
 
     // Setup pixel format
@@ -251,13 +250,15 @@ TFWindow::TFWindow()
     if (!context)
         TF_CORE_ASSERT(false, "Failed to create OpenGL context");
 
-    if (!wglMakeCurrent(hdc, context))
-        TF_CORE_ASSERT(false, "Failed to make OpenGL context current");
+    BOOL result = wglMakeCurrent(hdc, context);
+    std::cout << "wglMakeCurrent: " << result << std::endl;
 
+    if (wglGetCurrentContext() == NULL)
+        TF_CORE_ASSERT(false, "No current OpenGL context before initializing GLAD!");
 
-    // Initialize GLAD properly
-    if (!gladLoadGLLoader((GLADloadproc)wglGetProcAddress))
-        TF_CORE_ASSERT(false, "Failed to initialize GLAD");
+    if (!gladLoadGLLoader((GLADloadproc)wglGetProcAddress)) {
+		TF_CORE_ASSERT(false, "Failed to initialize GLAD");
+    }
 
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
