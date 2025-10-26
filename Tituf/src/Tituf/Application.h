@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.h"
+#include "Tituf/LayerStack.h"
 #include "Event/Event.h"
 
 namespace Tituf	
@@ -27,9 +28,13 @@ namespace Tituf
 			bool OnMouseButtonPressedEvent(Event& e);
 			bool OnMouseButtonReleasedEvent(Event& e);
 
+			void PushLayer(Layer* layer);
+			void PushOverlay(Layer* overlay);
+			void HandleLayersEvents(Event& e);
 		private:
 			std::unique_ptr<TFWindow> m_Window;
 			bool running = true;
+			LayerStack m_LayerStack;
 	};
 
 	// To be defined in CLIENT

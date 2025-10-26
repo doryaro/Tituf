@@ -4,7 +4,7 @@
 #include "Tituf/Event/ApplicationEvent.h"
 #include "Tituf/Event/KeyEvent.h"
 #include "Tituf/Event/MouseEvent.h"
- 
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 class TFWindow

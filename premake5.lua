@@ -10,6 +10,12 @@ workspace "Tituf"
 
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+	IncludeDir = {}
+	IncludeDir["Glad"] = "Tituf/vendor/Glad/include"
+
+
+	include "Tituf/vendor/Glad"
+
 
 project "Tituf"
 	location "Tituf"
@@ -33,7 +39,14 @@ project "Tituf"
 	includedirs 
 	{	  
 		"%{prj.name}/src",    
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include", 
+		"%{IncludeDir.Glad}"
+	}
+
+	links
+	{
+		"Glad",
+		"opengl32.lib"
 	}
 
 	-- common Windows-specific settings (applies to all configurations)

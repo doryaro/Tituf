@@ -31,7 +31,10 @@ namespace Tituf
 				TF_CORE_INFO("Window closed");
 				break;
 			}
-
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnUpdate(0.016f); // assuming a fixed timestep for simplicity	
+			}
 			Sleep(16); // ~60 FPS
 			// TODO: Update, Render, etc.
 		}
@@ -64,11 +67,13 @@ namespace Tituf
 	{
 		//TF_CORE_TRACE("Event received: {0}", e.ToString());
 
-		EventDispatcher dispatcher(e);  
+		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) { return OnKeyPressEvent(e); });
 		dispatcher.Dispatch<KeyRepeatEvent>([this](KeyRepeatEvent& e) { return OnKeyRepeatEvent(e); });
 		dispatcher.Dispatch<KeyReleasedEvent>([this](KeyReleasedEvent& e) { return OnKeyReleasedEvent(e); });
-	}  
+		HandleLayersEvents(e);
+
+	}
 
 	bool Application::OnKeyPressEvent(Event& e)
 	{
@@ -94,6 +99,7 @@ namespace Tituf
 		dispatcher.Dispatch<MouseMovedEvent>([this](MouseMovedEvent& e) { return OnMouseMovedEvent(e); });
 		dispatcher.Dispatch<MouseButtonPressedEvent>([this](MouseButtonPressedEvent& e) { return OnMouseButtonPressedEvent(e); });
 		dispatcher.Dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent& e) { return OnMouseButtonReleasedEvent(e); });
+		HandleLayersEvents(e);
 	}
 	bool Application::OnMouseMovedEvent(Event& e)
 	{
@@ -110,4 +116,25 @@ namespace Tituf
 		TF_CORE_TRACE("Event received: {0}", e.ToString());
 		return true;
 	}
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
+	}
+
+	void Application::HandleLayersEvents(Event& e)
+	{
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		{
+			(*--it)->OnEvent(e);
+			if (e.m_Handled)
+				break;
+		}
+	}
+
 } 

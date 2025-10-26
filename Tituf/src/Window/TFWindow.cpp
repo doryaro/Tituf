@@ -1,5 +1,6 @@
 #include "tfpch.h"
 #include "TFWindow.h"
+#include "glad/glad.h" 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -188,11 +189,11 @@ void TFWindow::SetMouseEventCallback(const EventMouseCallbackFn& callback)
 }
 
 
+
 TFWindow::TFWindow()
 	: m_hInstance(GetModuleHandle(nullptr)), m_hWnd(nullptr)
 {
-
-	const wchar_t CLASS_NAME[] = L"TitufWindowClass";
+    const wchar_t CLASS_NAME[] = L"TitufWindowClass";
 	WNDCLASS wndClass = {};
 	wndClass.lpszClassName = CLASS_NAME;	
 	wndClass.hInstance = m_hInstance;	
@@ -229,6 +230,36 @@ TFWindow::TFWindow()
 		this
 	);
 	ShowWindow(m_hWnd, SW_SHOW);
+
+
+    HDC hdc = GetDC(m_hWnd);
+
+    // Setup pixel format
+    PIXELFORMATDESCRIPTOR pfd = {};
+    pfd.nSize = sizeof(pfd);
+    pfd.nVersion = 1;
+    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+    pfd.iPixelType = PFD_TYPE_RGBA;
+    pfd.cColorBits = 32;
+    pfd.cDepthBits = 24;
+    pfd.iLayerType = PFD_MAIN_PLANE;
+
+    int pf = ChoosePixelFormat(hdc, &pfd);
+    SetPixelFormat(hdc, pf, &pfd);
+
+    HGLRC context = wglCreateContext(hdc);
+    if (!context)
+        TF_CORE_ASSERT(false, "Failed to create OpenGL context");
+
+    if (!wglMakeCurrent(hdc, context))
+        TF_CORE_ASSERT(false, "Failed to make OpenGL context current");
+
+
+    // Initialize GLAD properly
+    if (!gladLoadGLLoader((GLADloadproc)wglGetProcAddress))
+        TF_CORE_ASSERT(false, "Failed to initialize GLAD");
+
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
 }
 TFWindow::~TFWindow()

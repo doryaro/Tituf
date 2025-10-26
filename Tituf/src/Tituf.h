@@ -4,8 +4,8 @@
 
 
 #include "Tituf/Application.h"	
+#include "Tituf/Layer.h"
 #include "Tituf/Log.h"	
-
 
 
 // --- Entry Point -----------------

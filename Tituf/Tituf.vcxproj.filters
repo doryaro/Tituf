@@ -34,6 +34,12 @@
     <ClInclude Include="src\Tituf\Event\MouseEvent.h">
       <Filter>Tituf\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tituf\Layer.h">
+      <Filter>Tituf</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\LayerStack.h">
+      <Filter>Tituf</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tituf\Log.h">
       <Filter>Tituf</Filter>
     </ClInclude>
@@ -44,6 +50,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Tituf\Application.cpp">
+      <Filter>Tituf</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tituf\Layer.cpp">
+      <Filter>Tituf</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tituf\LayerStack.cpp">
       <Filter>Tituf</Filter>
     </ClCompile>
     <ClCompile Include="src\Tituf\Log.cpp">
