@@ -19,25 +19,25 @@ namespace Tituf
 		m_Window = std::make_unique<TFWindow>();
 
 		// Set event callback after the window is created
-		m_Window->SetAppEventCallback(std::bind(&Application::OnAppEvent , this, std::placeholders::_1));
+		m_Window->SetAppEventCallback(std::bind(&Application::OnAppEvent, this, std::placeholders::_1));
 		m_Window->SetKeyEventCallback(std::bind(&Application::OnKeyEvent, this, std::placeholders::_1));
 		m_Window->SetMouseEventCallback(std::bind(&Application::OnMouseEvent, this, std::placeholders::_1));
 
+		m_Window->InitGlewContext();
+
 		while (running)
 		{
-			// Process window messages
 			if (!m_Window->ProcessMessages())
-			{
-				TF_CORE_INFO("Window closed");
 				break;
-			}
+
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			for (Layer* layer : m_LayerStack)
-			{
-				layer->OnUpdate(0.016f); // assuming a fixed timestep for simplicity	
-			}
-			
-			Sleep(16); // ~60 FPS
-			// TODO: Update, Render, etc.
+				layer->OnUpdate(0.016f);
+
+			m_Window->SwapBuffers();  // now works
+			Sleep(16);
 		}
 	}
 

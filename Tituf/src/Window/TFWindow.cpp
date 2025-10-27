@@ -1,9 +1,54 @@
 #include "tfpch.h"
 #include "TFWindow.h"
-#include <GL/glew.h>
+
+void TFWindow::SetPixels(HDC& m_hdc)
+{
+    PIXELFORMATDESCRIPTOR pfd = {};
+    pfd.nSize = sizeof(pfd);
+    pfd.nVersion = 1;
+    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+    pfd.iPixelType = PFD_TYPE_RGBA;
+    pfd.cColorBits = 32;
+    pfd.cDepthBits = 24;
+    pfd.iLayerType = PFD_MAIN_PLANE;
+
+    int pf = ChoosePixelFormat(m_hdc, &pfd);
+    SetPixelFormat(m_hdc, pf, &pfd);
+}
+
+void TFWindow::InitGlewContext()
+{
+    // 1. Get device context
+    m_hdc = GetDC(m_hWnd);
+
+    // 2. Set pixel format
+	SetPixels(m_hdc);
 
 
+    // 3. Create OpenGL context
+    HGLRC hglrc = wglCreateContext(m_hdc);
+    wglMakeCurrent(m_hdc, hglrc);
 
+    // 4. Initialize GLEW
+    glewExperimental = GL_TRUE; // needed for modern OpenGL
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+    {
+        std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
+    }
+    const GLubyte* version = glGetString(GL_VERSION);
+    const GLubyte* renderer = glGetString(GL_RENDERER);
+    std::cout << "OpenGL Version: " << version << std::endl;
+    std::cout << "Renderer: " << renderer << std::endl;
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    SwapBuffers();
+}
+
+void TFWindow::SwapBuffers()
+{
+    ::SwapBuffers(m_hdc);
+}
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -232,44 +277,8 @@ TFWindow::TFWindow()
 		this
 	);
 	ShowWindow(m_hWnd, SW_SHOW);
-     
-    // 2. Get device context
-    HDC hdc = GetDC(m_hWnd);
-
-    // 3. Set pixel format
-    PIXELFORMATDESCRIPTOR pfd = {};
-    pfd.nSize = sizeof(pfd);
-    pfd.nVersion = 1;
-    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-    pfd.iPixelType = PFD_TYPE_RGBA;
-    pfd.cColorBits = 32;
-    pfd.cDepthBits = 24;
-    pfd.iLayerType = PFD_MAIN_PLANE;
-
-    int pf = ChoosePixelFormat(hdc, &pfd);
-    SetPixelFormat(hdc, pf, &pfd);
-
-    // 4. Create OpenGL context
-    HGLRC hglrc = wglCreateContext(hdc);
-    wglMakeCurrent(hdc, hglrc);
-
-    // 5. Initialize GLEW
-    glewExperimental = GL_TRUE; // needed for modern OpenGL
-    GLenum err = glewInit();
-    if (err != GLEW_OK)
-    {
-        std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
-    }
-    const GLubyte* version = glGetString(GL_VERSION);
-    const GLubyte* renderer = glGetString(GL_RENDERER);
-    std::cout << "OpenGL Version: " << version << std::endl;
-    std::cout << "Renderer: " << renderer << std::endl;
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SwapBuffers(hdc); // only if using Win32 HDC
-
- 
-}
+       
+}  
 TFWindow::~TFWindow()
 {
 	const wchar_t CLASS_NAME[] = L"TitufWindowClass";	

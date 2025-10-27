@@ -19,3 +19,5 @@
 	#include "Window/TFWindow.h"
 #endif
 
+
+#include <GL/glew.h>

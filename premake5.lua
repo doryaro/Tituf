@@ -46,6 +46,11 @@ project "Tituf"
 		"%{prj.name}/vendor/spdlog/include"
 	}
 
+	defines
+	{
+		"GLEW_STATIC"
+	}
+
 	-- Windows-specific settings
 	filter "system:windows"
 		staticruntime "On"
@@ -53,9 +58,8 @@ project "Tituf"
 		buildoptions { "/utf-8" }
 		defines
 		{
-			"GLEW_STATIC",
 			"TF_PLATFORM_WINDOWS",
-			"TF_BUILD_DLL",
+			"TF_BUILD_DLL"
 		}
 
 		-- create output folder and copy DLLs
@@ -98,19 +102,29 @@ project "Sandbox"
 	{	
 		"Tituf/vendor/spdlog/include",
 		"Tituf/src",
-		"Tituf/vendor/glew/include"
+		"Tituf/../vendor/glew/include",
+	}
+	libdirs
+	{
+	    "%{prj.name}/../lib"  -- folder containing .lib files
 	}
 
 	links
 	{
-		"Tituf"
-	}
+		"Tituf",
+		"opengl32", 
+		"glew32s"  
+	}  
 
 	filter "system:windows"
 		staticruntime "On"
 		systemversion "latest"
 		buildoptions { "/utf-8" }
-		defines { "TF_PLATFORM_WINDOWS" }
+		defines 
+		{ 
+			"TF_PLATFORM_WINDOWS",
+			"GLEW_STATIC"
+		}
 
 	filter {}
 
