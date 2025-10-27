@@ -1,5 +1,10 @@
 #include "tfpch.h"
 #include "TFWindow.h"
+#include <GL/glew.h>
+
+
+
+
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -187,9 +192,6 @@ void TFWindow::SetMouseEventCallback(const EventMouseCallbackFn& callback)
     m_Data.EventMouseCallback = callback;
 }
 
-#include "glad/glad.h" 
-
-
 TFWindow::TFWindow()
 	: m_hInstance(GetModuleHandle(nullptr)), m_hWnd(nullptr)
 {
@@ -231,9 +233,10 @@ TFWindow::TFWindow()
 	);
 	ShowWindow(m_hWnd, SW_SHOW);
      
+    // 2. Get device context
     HDC hdc = GetDC(m_hWnd);
 
-    // Setup pixel format
+    // 3. Set pixel format
     PIXELFORMATDESCRIPTOR pfd = {};
     pfd.nSize = sizeof(pfd);
     pfd.nVersion = 1;
@@ -246,22 +249,26 @@ TFWindow::TFWindow()
     int pf = ChoosePixelFormat(hdc, &pfd);
     SetPixelFormat(hdc, pf, &pfd);
 
-    HGLRC context = wglCreateContext(hdc);
-    if (!context)
-        TF_CORE_ASSERT(false, "Failed to create OpenGL context");
+    // 4. Create OpenGL context
+    HGLRC hglrc = wglCreateContext(hdc);
+    wglMakeCurrent(hdc, hglrc);
 
-    BOOL result = wglMakeCurrent(hdc, context);
-    std::cout << "wglMakeCurrent: " << result << std::endl;
-
-    if (wglGetCurrentContext() == NULL)
-        TF_CORE_ASSERT(false, "No current OpenGL context before initializing GLAD!");
-
-    if (!gladLoadGLLoader((GLADloadproc)wglGetProcAddress)) {
-		TF_CORE_ASSERT(false, "Failed to initialize GLAD");
+    // 5. Initialize GLEW
+    glewExperimental = GL_TRUE; // needed for modern OpenGL
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+    {
+        std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
     }
+    const GLubyte* version = glGetString(GL_VERSION);
+    const GLubyte* renderer = glGetString(GL_RENDERER);
+    std::cout << "OpenGL Version: " << version << std::endl;
+    std::cout << "Renderer: " << renderer << std::endl;
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    SwapBuffers(hdc); // only if using Win32 HDC
 
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-
+ 
 }
 TFWindow::~TFWindow()
 {

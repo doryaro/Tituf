@@ -10,34 +10,17 @@ workspace "Tituf"
 
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-	IncludeDir = {}
-	IncludeDir["Glad"] = "Tituf/vendor/Glad/include"
-	includedirs
-	{
-		"%{IncludeDir.Glad}"
-	}
-
-
-	include "Tituf/vendor/Glad"
-
 
 project "Tituf"
 	location "Tituf"
 	kind "SharedLib"	
-	language 
-	"C++"
+	language "C++"
 	cppdialect "C++20"	
 	targetdir("bin/" .. outputdir .. "/%{prj.name}")
 	objdir("bin-int/" .. outputdir .. "/%{prj.name}")	
 	
 	pchheader "tfpch.h"
 	pchsource "Tituf/src/tfpch.cpp"
-	
-	links
-	{
-		"Glad",
-		"opengl32.lib"
-	}
 
 	files
 	{
@@ -45,38 +28,45 @@ project "Tituf"
 		"%{prj.name}/src/**.cpp",
 	}			
 
-	-- common include dirs for all configurations
-	includedirs 
-	{	  
-		"%{prj.name}/src",    
-		"%{prj.name}/vendor/spdlog/include", 
-		"%{IncludeDir.Glad}"
+	libdirs
+	{
+	    "%{prj.name}/../lib"  -- folder containing .lib files
+	}
+	links
+	{
+		"opengl32", 
+		"glew32s"   
 	}
 
+	-- include directories
+	includedirs 
+	{	  
+		"%{prj.name}/../vendor/glew/include",
+		"%{prj.name}/src",    
+		"%{prj.name}/vendor/spdlog/include"
+	}
 
-
-	-- common Windows-specific settings (applies to all configurations)
+	-- Windows-specific settings
 	filter "system:windows"
 		staticruntime "On"
 		systemversion "latest"
-		-- Ensure MSVC compiles source files as UTF-8 for spdlog/fmt
 		buildoptions { "/utf-8" }
 		defines
 		{
+			"GLEW_STATIC",
 			"TF_PLATFORM_WINDOWS",
 			"TF_BUILD_DLL",
 		}
-		-- create destination and copy the built DLL for all configs
+
+		-- create output folder and copy DLLs
 		postbuildcommands
 		{
-			("{MKDIR} ../bin/" .. outputdir .. "/Sandbox"),
-			("powershell -Command \"Copy-Item -Path '%{cfg.buildtarget.abspath}' -Destination '../bin/" .. outputdir .. "/Sandbox' -Force\"")
+			"{MKDIR} ../bin/" .. outputdir .. "/Sandbox",
+			"powershell -Command \"Copy-Item -Path '%{cfg.buildtarget.abspath}' -Destination '../bin/" .. outputdir .. "/Sandbox' -Force\"",
 		}
-
-	-- clear filter so next filters don't get combined unexpectedly
+		     
 	filter {}
 
-	-- configuration-specific settings
 	filter "configurations:Debug"
 		defines "TF_DEBUG"
 		symbols "On"
@@ -89,7 +79,7 @@ project "Tituf"
 		defines "TF_DIST"	
 		optimize "On"	
 
--- Sandbox project kept similarly (only snippet shown here for clarity)
+
 project "Sandbox"
 	location "Sandbox"	
 	kind "ConsoleApp"
@@ -107,8 +97,8 @@ project "Sandbox"
 	includedirs
 	{	
 		"Tituf/vendor/spdlog/include",
-		"Tituf/src", 
-		"Tituf/vendor/Glad/include"
+		"Tituf/src",
+		"Tituf/vendor/glew/include"
 	}
 
 	links

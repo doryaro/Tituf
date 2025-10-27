@@ -35,6 +35,7 @@ namespace Tituf
 			{
 				layer->OnUpdate(0.016f); // assuming a fixed timestep for simplicity	
 			}
+			
 			Sleep(16); // ~60 FPS
 			// TODO: Update, Render, etc.
 		}
