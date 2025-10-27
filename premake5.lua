@@ -1,6 +1,6 @@
 workspace "Tituf"
 	architecture "x64"
-	startproject "Tituf"
+	startproject "Sandbox" 
 	configurations
 	{
 		"Debug",
@@ -30,7 +30,7 @@ project "Tituf"
 
 	libdirs
 	{
-	    "%{prj.name}/../lib"  -- folder containing .lib files
+	    "%{wks.location}/vendor/glew/lib"  -- folder containing .lib files
 	}
 	links
 	{
@@ -41,7 +41,7 @@ project "Tituf"
 	-- include directories
 	includedirs 
 	{	  
-		"%{prj.name}/../vendor/glew/include",
+		"%{wks.location}/vendor/glew/include",
 		"%{prj.name}/src",    
 		"%{prj.name}/vendor/spdlog/include"
 	}
@@ -102,11 +102,11 @@ project "Sandbox"
 	{	
 		"Tituf/vendor/spdlog/include",
 		"Tituf/src",
-		"Tituf/../vendor/glew/include",
+		"%{wks.location}/vendor/glew/include",
 	}
 	libdirs
 	{
-	    "%{prj.name}/../lib"  -- folder containing .lib files
+	    "%{wks.location}/vendor/glew/lib"  -- folder containing .lib files
 	}
 
 	links
