@@ -26,7 +26,15 @@ project "Tituf"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
-	}			
+		"%{prj.name}/config/*",  -- <-- include Config.cpp here
+		--"%{prj.name}/config/Config.cpp",  -- <-- include Config.cpp here
+		--"%{prj.name}/config/Config.cpp",  -- <-- include Config.cpp here
+
+		-- ImGui core + backend files
+        "%{wks.location}/vendor/imgui/*.cpp",
+        "%{wks.location}/vendor/imgui/backends/imgui_impl_win32.cpp",
+        "%{wks.location}/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+	}		
 
 	libdirs
 	{
@@ -42,8 +50,11 @@ project "Tituf"
 	includedirs 
 	{	  
 		"%{wks.location}/vendor/glew/include",
+        "%{wks.location}/vendor/imgui",
+        "%{wks.location}/vendor/imgui/backends",
 		"%{prj.name}/src",    
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/config"
 	}
 
 	defines
@@ -103,6 +114,9 @@ project "Sandbox"
 		"Tituf/vendor/spdlog/include",
 		"Tituf/src",
 		"%{wks.location}/vendor/glew/include",
+		"%{wks.location}/vendor/imgui",
+        "%{wks.location}/vendor/imgui/backends",
+		"Tituf/config"
 	}
 	libdirs
 	{

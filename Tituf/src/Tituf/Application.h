@@ -2,44 +2,48 @@
 #include "Core.h"
 #include "Tituf/LayerStack.h"
 #include "Event/Event.h"
+#include "Window/TFWindow.h"
 
-namespace Tituf	
+namespace Tituf
 {
-
 	class TITUF_API Application
 	{
-		public:
-			Application();
-			virtual ~Application();
-		
-			void Run();
+	public:
+		// Singleton access
+		static Application& Get() { return *s_Instance; }
 
-			void OnAppEvent(Event& e);
-			bool OnWindowResize(WindowResizeEvent& e);
-			bool OnWindowClose(WindowCloseEvent& e);
+		Application();
+		virtual ~Application();
 
-			void OnKeyEvent(Event& e);
-			bool OnKeyPressEvent(Event& e);
-			bool OnKeyRepeatEvent(Event& e);
-			bool OnKeyReleasedEvent(Event& e);
+		void Run();
 
-			void OnMouseEvent(Event& e);
-			bool OnMouseMovedEvent(Event& e);
-			bool OnMouseButtonPressedEvent(Event& e);
-			bool OnMouseButtonReleasedEvent(Event& e);
+		// Event handling
+		void OnAppEvent(Event& e);
+		bool OnWindowResize(WindowResizeEvent& e);
+		bool OnWindowClose(WindowCloseEvent& e);
 
-			void PushLayer(Layer* layer);
-			void PushOverlay(Layer* overlay);
-			void HandleLayersEvents(Event& e);
-		private:
-			std::unique_ptr<TFWindow> m_Window;
-			bool running = true;
-			LayerStack m_LayerStack;
+		void OnKeyEvent(Event& e);
+		bool OnKeyPressEvent(KeyPressedEvent& e);
+		bool OnKeyRepeatEvent(KeyRepeatEvent& e);
+		bool OnKeyReleasedEvent(KeyReleasedEvent& e);
+
+		void OnMouseEvent(Event& e);
+		bool OnMouseMovedEvent(MouseMovedEvent& e);
+		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
+		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
+
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
+		void HandleLayersEvents(Event& e);
+
+	private:
+		TFWindow& m_Window = TFWindow::Get(); // always points to the singleton
+		bool running = true;
+		LayerStack m_LayerStack;
+
+		static Application* s_Instance;
 	};
 
 	// To be defined in CLIENT
 	Application* CreateApplication();
-
 }
-
- 

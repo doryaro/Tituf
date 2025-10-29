@@ -4,51 +4,65 @@
 #include "Tituf/Event/ApplicationEvent.h"
 #include "Tituf/Event/KeyEvent.h"
 #include "Tituf/Event/MouseEvent.h"
+#include <Config.h>
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 class TFWindow
 {
-	public: 
-	TFWindow();
-	TFWindow(const TFWindow& other) = delete;
-	TFWindow& operator=(const TFWindow& other) = delete;
-	~TFWindow();
-	  
-	bool ProcessMessages();
-	   
-	void SetPixels(HDC& hdc);
+public:
+    // Get the single instance   
+    static TFWindow& Get()
+    {
+        static TFWindow instance; // created once, guaranteed to be destroyed
+        return instance;
+    }
 
-	void InitGlewContext();
+    void Init();
+    // Delete copy and move constructors
+    TFWindow(const TFWindow& other) = delete;
+    TFWindow& operator=(const TFWindow& other) = delete;
+    TFWindow(TFWindow&& other) = delete;
+    TFWindow& operator=(TFWindow&& other) = delete;
 
-	void SwapBuffers();
-	  
-	using EventAppCallbackFn = std::function<void(Tituf::Event&)>;
-	using EventKeyCallbackFn = std::function<void(Tituf::Event&)>;
-	using EventMouseCallbackFn = std::function<void(Tituf::Event&)>;
+    ~TFWindow();
 
-	void SetAppEventCallback(const EventAppCallbackFn& callback);
-	void SetKeyEventCallback(const EventKeyCallbackFn& callback);
-	void SetMouseEventCallback(const EventMouseCallbackFn& callback);
+    bool ProcessMessages();
+    void SetPixels(HDC& hdc);
+    void InitGlewContext();
+    void SwapBuffers();
 
+    using EventAppCallbackFn = std::function<void(Tituf::Event&)>;
+    using EventKeyCallbackFn = std::function<void(Tituf::Event&)>;
+    using EventMouseCallbackFn = std::function<void(Tituf::Event&)>;
+
+    void SetAppEventCallback(const EventAppCallbackFn& callback);
+    void SetKeyEventCallback(const EventKeyCallbackFn& callback);
+    void SetMouseEventCallback(const EventMouseCallbackFn& callback);
+
+
+    HDC GetHdc() const { return m_hdc; }
+    HWND GetHwnd() const { return m_hWnd; } // Add this for ImGui
 
 private:
-	HINSTANCE m_hInstance;
-	HWND m_hWnd;
-	HDC m_hdc = nullptr;   
-	HGLRC m_hGLRC = nullptr;
-	struct WindowData
-	{
-		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
-		EventAppCallbackFn EventAppCallback;
-		EventMouseCallbackFn EventMouseCallback;
-		EventKeyCallbackFn EventKeyCallback;
-	};
-	WindowData m_Data;
+    TFWindow(); // private constructor
+
+    HINSTANCE m_hInstance;
+    HWND m_hWnd;
+    HDC m_hdc = nullptr;
+    HGLRC m_hGLRC = nullptr;
+	Tituf::Config m_Config;
+    struct WindowData
+    {
+        std::string Title;
+        unsigned int Width;
+        unsigned int Height;
+        EventAppCallbackFn EventAppCallback;
+        EventMouseCallbackFn EventMouseCallback;
+        EventKeyCallbackFn EventKeyCallback;
+    };
+
+    WindowData m_Data;
 public:
-	inline WindowData& GetData() {return m_Data;}
-	HDC GetHdc() const { return m_hdc; }
+    inline WindowData& GetData() { return m_Data; }
 };
-  

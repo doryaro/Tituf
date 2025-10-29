@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\glew\include;src;vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -106,7 +106,7 @@ powershell -Command "Copy-Item -Path '../bin/Debug-windows-x86_64/Tituf/Tituf.dl
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\glew\include;src;vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -136,7 +136,7 @@ powershell -Command "Copy-Item -Path '../bin/Release-windows-x86_64/Tituf/Tituf.
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\glew\include;src;vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -161,6 +161,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.dll
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="config\Config.h" />
     <ClInclude Include="src\Tituf.h" />
     <ClInclude Include="src\Tituf\Application.h" />
     <ClInclude Include="src\Tituf\Core.h" />
@@ -169,6 +170,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.dll
     <ClInclude Include="src\Tituf\Event\Event.h" />
     <ClInclude Include="src\Tituf\Event\KeyEvent.h" />
     <ClInclude Include="src\Tituf\Event\MouseEvent.h" />
+    <ClInclude Include="src\Tituf\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Tituf\Layer.h" />
     <ClInclude Include="src\Tituf\LayerStack.h" />
     <ClInclude Include="src\Tituf\Log.h" />
@@ -176,7 +178,16 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.dll
     <ClInclude Include="src\tfpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\vendor\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="config\Config.cpp" />
     <ClCompile Include="src\Tituf\Application.cpp" />
+    <ClCompile Include="src\Tituf\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Tituf\Layer.cpp" />
     <ClCompile Include="src\Tituf\LayerStack.cpp" />
     <ClCompile Include="src\Tituf\Log.cpp" />
@@ -184,6 +195,9 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.dll
     <ClCompile Include="src\tfpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config\config.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

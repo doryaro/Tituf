@@ -1,5 +1,6 @@
 #pragma once
 
+
 #ifdef TF_PLATFORM_WINDOWS
 	#ifdef TF_BUILD_DLL 
 		#define TITUF_API __declspec(dllexport)
@@ -31,3 +32,6 @@
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
 #endif
+
+// CONFIG_PATH relative to the project root
+#define CONFIG_PATH "../Tituf/config/config.ini" 

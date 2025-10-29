@@ -1,6 +1,7 @@
 #include "tfpch.h"
 #include "TFWindow.h"
 
+
 void TFWindow::SetPixels(HDC& m_hdc)
 {
     PIXELFORMATDESCRIPTOR pfd = {};
@@ -18,28 +19,20 @@ void TFWindow::SetPixels(HDC& m_hdc)
 
 void TFWindow::InitGlewContext()
 {
-    // 1. Get device context
     m_hdc = GetDC(m_hWnd);
+    SetPixels(m_hdc);
 
-    // 2. Set pixel format
-	SetPixels(m_hdc);
+    m_hGLRC = wglCreateContext(m_hdc);
+    wglMakeCurrent(m_hdc, m_hGLRC);
 
-
-    // 3. Create OpenGL context
-    HGLRC hglrc = wglCreateContext(m_hdc);
-    wglMakeCurrent(m_hdc, hglrc);
-
-    // 4. Initialize GLEW
-    glewExperimental = GL_TRUE; // needed for modern OpenGL
+    glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK)
-    {
         std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
-    }
-    const GLubyte* version = glGetString(GL_VERSION);
-    const GLubyte* renderer = glGetString(GL_RENDERER);
-    std::cout << "OpenGL Version: " << version << std::endl;
-    std::cout << "Renderer: " << renderer << std::endl;
+
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     SwapBuffers();
@@ -50,22 +43,9 @@ void TFWindow::SwapBuffers()
     ::SwapBuffers(m_hdc);
 }
 
-
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    TFWindow* window = nullptr;
-
-    // Retrieve pointer to our TFWindow instance
-    if (message == WM_NCCREATE)
-    {
-        CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
-        window = static_cast<TFWindow*>(cs->lpCreateParams);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)window);
-    }
-    else
-    {
-        window = reinterpret_cast<TFWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    }
+    TFWindow& window = TFWindow::Get(); // access singleton
 
     switch (message)
     {
@@ -81,122 +61,62 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     {
         int width = LOWORD(lParam);
         int height = HIWORD(lParam);
-        if (window)
-        {
-            // Dispatch a resize event to the engine/application
-            Tituf::WindowResizeEvent event(width, height);
-            auto& data = window->GetData();
-            if (data.EventAppCallback)
-                data.EventAppCallback(event);
-        }
+        Tituf::WindowResizeEvent event(width, height);
+        if (window.GetData().EventAppCallback)
+            window.GetData().EventAppCallback(event);
         return 0;
     }
     case WM_KEYDOWN:
     {
         int key = static_cast<int>(wParam);
-        bool repeat = (lParam & 0x40000000) != 0; // check bit 30 for repeat
+        bool repeat = (lParam & 0x40000000) != 0;
         int repeatCount = lParam & 0xFFFF;
 
-        if (window)
+        if (repeat)
         {
-            if (repeat)
-            {
-				Tituf::KeyRepeatEvent event(key, repeatCount);  //only print 1 repeats
-                auto& data = window->GetData();
-                if (data.EventKeyCallback)
-                    data.EventKeyCallback(event);
-            }
-            else
-            {
-                Tituf::KeyPressedEvent event(key, 0);
-                auto& data = window->GetData();
-                if (data.EventKeyCallback)
-                    data.EventKeyCallback(event);
-            }
+            Tituf::KeyRepeatEvent event(key, repeatCount);
+            if (window.GetData().EventKeyCallback)
+                window.GetData().EventKeyCallback(event);
+        }
+        else
+        {
+            Tituf::KeyPressedEvent event(key, 0);
+            if (window.GetData().EventKeyCallback)
+                window.GetData().EventKeyCallback(event);
         }
         return 0;
     }
-
     case WM_KEYUP:
     {
         int key = static_cast<int>(wParam);
-        if (window)
-        {
-            Tituf::KeyReleasedEvent event(key);
-            auto& data = window->GetData();
-            if (data.EventKeyCallback)
-                data.EventKeyCallback(event);
-        }
+        Tituf::KeyReleasedEvent event(key);
+        if (window.GetData().EventKeyCallback)
+            window.GetData().EventKeyCallback(event);
         return 0;
-	}  
+    }
     case WM_MOUSEMOVE:
     {
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
-
-        if (window)
-        {
-            Tituf::MouseMovedEvent event((float)x, (float)y);
-            auto& data = window->GetData();
-            if (data.EventMouseCallback)
-                data.EventMouseCallback(event);
-        }
+        Tituf::MouseMovedEvent event((float)x, (float)y);
+        if (window.GetData().EventMouseCallback)
+            window.GetData().EventMouseCallback(event);
         return 0;
     }
-
     case WM_LBUTTONDOWN:
     {
-        int button = 0; // Left button
-        if (window)
-        {
-            Tituf::MouseButtonPressedEvent event(button);
-            auto& data = window->GetData();
-            if (data.EventMouseCallback)
-                data.EventMouseCallback(event);
-        }
+        Tituf::MouseButtonPressedEvent event(0);
+        if (window.GetData().EventMouseCallback)
+            window.GetData().EventMouseCallback(event);
         return 0;
     }
-
     case WM_LBUTTONUP:
     {
-        int button = 0; // Left button
-        if (window)
-        {
-            Tituf::MouseButtonReleasedEvent event(button);
-            auto& data = window->GetData();
-            if (data.EventMouseCallback)
-                data.EventMouseCallback(event);
-        }
+        Tituf::MouseButtonReleasedEvent event(0);
+        if (window.GetData().EventMouseCallback)
+            window.GetData().EventMouseCallback(event);
         return 0;
     }
-
-    //case WM_RBUTTONDOWN:
-    //{
-    //    int button = 1; // Right button
-    //    if (window)
-    //    {
-    //        Tituf::MouseButtonPressedEvent event(button);
-    //        auto& data = window->GetData();
-    //        if (data.EventMouseCallback)
-    //            data.EventMouseCallback(event);
-    //    }
-    //    return 0;
-    //}
-
-    //case WM_RBUTTONUP:
-    //{
-    //    int button = 1; // Right button
-    //    if (window)
-    //    {
-    //        Tituf::MouseButtonReleasedEvent event(button);
-    //        auto& data = window->GetData();
-    //        if (data.EventMouseCallback)
-    //            data.EventMouseCallback(event);
-    //    }
-    //    return 0;
-    //}
-
-
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -204,85 +124,88 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     return 0;
 }
 
-
 bool TFWindow::ProcessMessages()
 {
-	MSG msg = {};
-	while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-	{
-		if (msg.message == WM_QUIT)
-		{
-			return false;
-		}
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+    MSG msg = {};
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+    {
+        if (msg.message == WM_QUIT)
+            return false;
 
-	}
-
-	return true;
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+    return true;
 }
- 
+// Event callbacks remain unchanged
 void TFWindow::SetAppEventCallback(const EventAppCallbackFn& callback)
 {
-	m_Data.EventAppCallback = callback;
+    m_Data.EventAppCallback = callback;
 }
-
 void TFWindow::SetKeyEventCallback(const EventKeyCallbackFn& callback)
 {
     m_Data.EventKeyCallback = callback;
 }
-
 void TFWindow::SetMouseEventCallback(const EventMouseCallbackFn& callback)
 {
     m_Data.EventMouseCallback = callback;
 }
 
-TFWindow::TFWindow()
-	: m_hInstance(GetModuleHandle(nullptr)), m_hWnd(nullptr)
+void TFWindow::Init()
 {
     const wchar_t CLASS_NAME[] = L"TitufWindowClass";
-	WNDCLASS wndClass = {};
-	wndClass.lpszClassName = CLASS_NAME;	
-	wndClass.hInstance = m_hInstance;	
-	wndClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndClass.lpfnWndProc = WindowProc;
+    WNDCLASS wndClass = {};
+    wndClass.lpszClassName = CLASS_NAME;
+    wndClass.hInstance = m_hInstance;
+    wndClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+    wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wndClass.lpfnWndProc = WindowProc;
 
-	RegisterClass(&wndClass);
+    RegisterClass(&wndClass);
 
     DWORD style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
 
-	int width = 640;
-	int height = 480;
 
-	RECT rect;
-	rect.left = 250;
-	rect.top = 250;
-	rect.right = rect.left + width;
-	rect.bottom = rect.top + height;
-	AdjustWindowRect(&rect, style, FALSE);
 
-	m_hWnd = CreateWindowEx(
-		0,
-		CLASS_NAME,
-		L"Tituf Engine",
-		style,
-		rect.left,
-		rect.top,
-		rect.right - rect.left,
-		rect.bottom - rect.top,
-		NULL,
-		NULL,
-		m_hInstance,
-		this
-	);
-	ShowWindow(m_hWnd, SW_SHOW);
-       
-}  
-TFWindow::~TFWindow()
-{
-	const wchar_t CLASS_NAME[] = L"TitufWindowClass";	
-	UnregisterClass(CLASS_NAME, m_hInstance);
+    if (!m_Config.Load(CONFIG_PATH))
+    {
+        TF_CORE_ERROR("Failed to load config.ini!");
+    }
+	m_Data.Width = m_Config.GetInt("Window","Width",-1);
+	m_Data.Height = m_Config.GetInt("Window", "Height",-1);
+
+    RECT rect;
+    rect.left = m_Config.GetInt("Rect","left",-1);
+    rect.top = m_Config.GetInt("Rect", "top", -1);
+    rect.right = m_Config.GetInt("Rect", "right", -1);
+    rect.bottom = m_Config.GetInt("Rect", "bottom", -1);
+    AdjustWindowRect(&rect, style, FALSE);
+
+    m_hWnd = CreateWindowEx(
+        0,
+        CLASS_NAME,
+        L"Tituf Engine",
+        style,
+        rect.left,
+        rect.top,
+        rect.right - rect.left,
+        rect.bottom - rect.top,
+        NULL,
+        NULL,
+        m_hInstance,
+        nullptr // no longer pass 'this'
+    );
+
+    ShowWindow(m_hWnd, SW_SHOW);
 }
 
+TFWindow::TFWindow()
+    : m_hInstance(GetModuleHandle(nullptr)), m_hWnd(nullptr)
+{
+}
 
+TFWindow::~TFWindow()
+{
+    const wchar_t CLASS_NAME[] = L"TitufWindowClass";
+    UnregisterClass(CLASS_NAME, m_hInstance);
+}

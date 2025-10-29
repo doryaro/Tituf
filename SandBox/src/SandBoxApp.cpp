@@ -2,7 +2,6 @@
 #include "tfpch.h"
 #include <Tituf.h>
 
-
 class ExampleLayer : public Tituf::Layer
 {
 	public:
@@ -16,7 +15,7 @@ class ExampleLayer : public Tituf::Layer
 	{
 		TF_INFO("ExampleLayer detached");
 	}
-	virtual void OnUpdate(float deltaTime) override
+	virtual void OnUpdate() override
 	{
 		//TF_INFO("ExampleLayer updated: {0} seconds elapsed", deltaTime);
 		// Update logic here
@@ -38,6 +37,7 @@ public:
 	SandBoxApp() 
 	{
 		PushLayer(new ExampleLayer());
+		PushOverlay(new Tituf::ImGuiLayer());
 	};
 	~SandBoxApp() {};   
 

@@ -2,6 +2,7 @@
 
 #include "Tituf/Core.h"
 #include "Tituf/Event/Event.h"
+#include "../Window/TFWindow.h"
 
 namespace Tituf
 {
@@ -12,7 +13,7 @@ namespace Tituf
 		virtual ~Layer();
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate(float deltaTime) {}
+		virtual void OnUpdate() {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 		inline const std::string& GetName() const { return m_DebugName; }
