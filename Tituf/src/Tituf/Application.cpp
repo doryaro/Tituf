@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Event/ApplicationEvent.h"
 #include "Log.h"
+#include "ImGui/ImGuiLayer.h"
 
 namespace Tituf
 {
@@ -68,6 +69,7 @@ namespace Tituf
 	void Application::OnKeyEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyTypedEvent>([this](KeyTypedEvent& e) { return OnKeyTypedEvent(e); });
 		dispatcher.Dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) { return OnKeyPressEvent(e); });
 		dispatcher.Dispatch<KeyRepeatEvent>([this](KeyRepeatEvent& e) { return OnKeyRepeatEvent(e); });
 		dispatcher.Dispatch<KeyReleasedEvent>([this](KeyReleasedEvent& e) { return OnKeyReleasedEvent(e); });
@@ -77,6 +79,8 @@ namespace Tituf
 	bool Application::OnKeyPressEvent(KeyPressedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
 	bool Application::OnKeyRepeatEvent(KeyRepeatEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
 	bool Application::OnKeyReleasedEvent(KeyReleasedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
+	bool Application::OnKeyTypedEvent(KeyTypedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
+
 
 	void Application::OnMouseEvent(Event& e)
 	{
@@ -88,6 +92,7 @@ namespace Tituf
 	}
 
 	bool Application::OnMouseMovedEvent(MouseMovedEvent& e) { return true; }
+ 
 	bool Application::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
 	bool Application::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
 

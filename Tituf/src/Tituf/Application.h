@@ -26,6 +26,7 @@ namespace Tituf
 		bool OnKeyPressEvent(KeyPressedEvent& e);
 		bool OnKeyRepeatEvent(KeyRepeatEvent& e);
 		bool OnKeyReleasedEvent(KeyReleasedEvent& e);
+		bool OnKeyTypedEvent(KeyTypedEvent& e);
 
 		void OnMouseEvent(Event& e);
 		bool OnMouseMovedEvent(MouseMovedEvent& e);

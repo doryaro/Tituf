@@ -70,5 +70,23 @@ namespace Tituf
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
+	class TITUF_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode, int repeatCount)
+			: KeyEvent(keycode), m_RepeatCount(repeatCount) {
+		}
+		inline int GetRepeatCount() const { return m_RepeatCount; }
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_KeyCode;
+			return ss.str();
+		}
+		EVENT_CLASS_TYPE(KeyTyped)
+	private:
+		int m_RepeatCount;
+	};
+
 }
 			

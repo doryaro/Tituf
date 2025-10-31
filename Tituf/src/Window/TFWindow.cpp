@@ -66,6 +66,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             window.GetData().EventAppCallback(event);
         return 0;
     }
+    case WM_CHAR:
+    {
+        unsigned int character = static_cast<unsigned int>(wParam);
+        Tituf::KeyTypedEvent event(character, 0);
+        if (window.GetData().EventKeyCallback)
+            window.GetData().EventKeyCallback(event);
+        return 0;
+    }
     case WM_KEYDOWN:
     {
         int key = static_cast<int>(wParam);
@@ -177,8 +185,8 @@ void TFWindow::Init()
     RECT rect;
     rect.left = m_Config.GetInt("Rect","left",-1);
     rect.top = m_Config.GetInt("Rect", "top", -1);
-    rect.right = m_Config.GetInt("Rect", "right", -1);
-    rect.bottom = m_Config.GetInt("Rect", "bottom", -1);
+    rect.right = rect.left + m_Data.Width;  // width from Window section
+    rect.bottom = rect.top + m_Data.Height; // height from Window section
     AdjustWindowRect(&rect, style, FALSE);
 
     m_hWnd = CreateWindowEx(
