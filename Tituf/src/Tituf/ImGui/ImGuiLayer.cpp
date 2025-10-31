@@ -22,10 +22,19 @@ namespace Tituf
 		 
 
 
-		auto now = std::chrono::high_resolution_clock::now();
-		float time = std::chrono::duration<float>(now.time_since_epoch()).count();
-		io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
-		m_Time = time;
+		//auto now = std::chrono::high_resolution_clock::now();
+		//float time = std::chrono::duration<float>(now.time_since_epoch()).count();
+		//io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
+		//m_Time = time;
+		std::chrono::time_point<std::chrono::high_resolution_clock>
+			now = std::chrono::high_resolution_clock::now();
+		if (m_LastFrameTime.time_since_epoch().count() != 0) {
+			io.DeltaTime = std::chrono::duration<float>(now - m_LastFrameTime).count();
+		}
+		else {
+			io.DeltaTime = 1.0f / 60.0f; // default for first frame
+		}
+		m_LastFrameTime = now;
 
 
 		ImGui_ImplOpenGL3_NewFrame();

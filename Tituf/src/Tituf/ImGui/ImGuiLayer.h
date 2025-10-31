@@ -14,6 +14,6 @@ namespace Tituf
 		virtual void OnUpdate() override ;	
 	private:
 		float m_Time = 0.0f;
-
+		std::chrono::time_point<std::chrono::high_resolution_clock>	m_LastFrameTime;
 	};
 }
