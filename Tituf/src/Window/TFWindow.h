@@ -44,6 +44,8 @@ public:
     HDC GetHdc() const { return m_hdc; }
     HWND GetHwnd() const { return m_hWnd; } // Add this for ImGui
 
+	//virtual void* GetNativeWindow() const { return m_hWnd; }   for cross-platform compatibility 
+     
 private:
     TFWindow(); // private constructor
 

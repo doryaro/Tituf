@@ -60,6 +60,9 @@
     <ClInclude Include="src\Tituf\ImGui\ImGuiLayer.h">
       <Filter>src\Tituf\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tituf\Input.h">
+      <Filter>src\Tituf</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tituf\Layer.h">
       <Filter>src\Tituf</Filter>
     </ClInclude>
@@ -70,6 +73,9 @@
       <Filter>src\Tituf</Filter>
     </ClInclude>
     <ClInclude Include="src\Window\TFWindow.h">
+      <Filter>src\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window\WindowsInput.h">
       <Filter>src\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\tfpch.h">
@@ -119,9 +125,13 @@
     <ClCompile Include="src\Window\TFWindow.cpp">
       <Filter>src\Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Window\WindowsInput.cpp">
+      <Filter>src\Window</Filter>
+    </ClCompile>
     <ClCompile Include="src\tfpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tituf\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\config.ini">

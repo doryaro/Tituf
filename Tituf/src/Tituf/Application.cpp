@@ -3,7 +3,7 @@
 #include "Event/ApplicationEvent.h"
 #include "Log.h"
 #include "ImGui/ImGuiLayer.h"
-
+#include "Input.h"
 namespace Tituf
 {
 	Application* Application::s_Instance = nullptr;
@@ -40,6 +40,12 @@ namespace Tituf
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
+
+			bool APressed = Input::IsKeyPressed(TF_KEY_A); // Example usage of Input
+			if (APressed)
+			{
+				TF_CORE_INFO("Key A is pressed");
+			}	 
 
 			m_Window.SwapBuffers();
 			Sleep(16); // simple frame limiter
