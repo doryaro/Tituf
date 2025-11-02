@@ -27,8 +27,8 @@ project "Tituf"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/config/*",  -- <-- include Config.cpp here
-		--"%{prj.name}/config/Config.cpp",  -- <-- include Config.cpp here
-		--"%{prj.name}/config/Config.cpp",  -- <-- include Config.cpp here
+		"%{prj.name}/vendor/glm/**.hpp",
+		"%{prj.name}/vendor/glm/**.inl",
 
 		-- ImGui core + backend files
         "%{wks.location}/vendor/imgui/*.cpp",
@@ -54,6 +54,7 @@ project "Tituf"
         "%{wks.location}/vendor/imgui/backends",
 		"%{prj.name}/src",    
 		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/vendor/glm",
 		"%{prj.name}/config"
 	}
 
@@ -112,6 +113,7 @@ project "Sandbox"
 	includedirs
 	{	
 		"Tituf/vendor/spdlog/include",
+		"Tituf/vendor/glm",
 		"Tituf/src",
 		"%{wks.location}/vendor/glew/include",
 		"%{wks.location}/vendor/imgui",

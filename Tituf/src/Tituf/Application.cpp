@@ -41,7 +41,7 @@ namespace Tituf
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
-			bool APressed = Input::IsKeyPressed(TF_KEY_A); // Example usage of Input
+			bool APressed = Input::IsKeyPressed(TF_KEY_TAB); // Example usage of Input
 			if (APressed)
 			{
 				TF_CORE_INFO("Key A is pressed");
