@@ -1,7 +1,24 @@
-# Tituf Game Engine
+# 🧱 Tituf Game Engine
+
+Tituf is a custom **C++ game engine** built for learning, experimentation, and performance.  
+It uses **Premake** for project generation, supports **Windows (Win32/OpenGL)**, and is designed to be modular and extendable.
+
 ---
 
-# 🧱 Building Tituf
+## ⚙️ Features
+
+- 🪟 **Windows platform support** (Win32 API)
+- 🎮 **Keyboard & mouse input system**
+- 🧩 **Event and layer architecture**
+- 🧱 **Renderer base (OpenGL-ready)**
+- 🧰 **Premake build system**
+- 💬 **ImGui integration** for debug UI
+- ⚡ **spdlog logging system**
+- 🧮 **OpenGL Mathematics (GLM)** for vector, matrix, and math operations *(submodule)*
+
+---
+
+# Building Tituf
 
 ## 📦 Prerequisites
 - **Windows 10 or 11**
