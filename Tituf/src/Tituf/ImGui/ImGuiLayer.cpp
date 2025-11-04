@@ -73,39 +73,7 @@ namespace Tituf
 	{
 	}
 
-	void ImGuiLayer::OnUpdate()
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(TFWindow::Get().GetData().Width, TFWindow::Get().GetData().Height);
-		 
-
-
-		//auto now = std::chrono::high_resolution_clock::now();
-		//float time = std::chrono::duration<float>(now.time_since_epoch()).count();
-		//io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
-		//m_Time = time;
-		std::chrono::time_point<std::chrono::high_resolution_clock>
-			now = std::chrono::high_resolution_clock::now();
-		if (m_LastFrameTime.time_since_epoch().count() != 0) {
-			io.DeltaTime = std::chrono::duration<float>(now - m_LastFrameTime).count();
-		}
-		else {
-			io.DeltaTime = 1.0f / 60.0f; // default for first frame
-		}
-		m_LastFrameTime = now;
-
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui::NewFrame();
-
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	} 
-
-	Tituf::ImGuiLayer::~ImGuiLayer()
+		Tituf::ImGuiLayer::~ImGuiLayer()
 	{
 	}
 
@@ -115,6 +83,9 @@ namespace Tituf
 		ImGui::StyleColorsDark();
 		ImGuiIO& io = ImGui::GetIO(); 
 		//(void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable keyboard controls
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable
+
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors; // We can honor GetMouseCursor() values (optional)
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;  // We can honor io.WantSetMousePos requests (optional, rarely used)
 		TFWindow& window = TFWindow::Get();
@@ -127,83 +98,10 @@ namespace Tituf
 
 	void Tituf::ImGuiLayer::OnDetach()
 	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 	}
-
-	void Tituf::ImGuiLayer::OnEvent(Event& event)
-	{
-		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<MouseButtonPressedEvent>(TF_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonPressedEvent));
-		dispatcher.Dispatch<MouseButtonReleasedEvent>(TF_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonReleasedEvent));
-		dispatcher.Dispatch<MouseMovedEvent>(TF_BIND_EVENT_FN(ImGuiLayer::OnMouseMovedEvent));
-		dispatcher.Dispatch<MouseScrolledEvent>(TF_BIND_EVENT_FN(ImGuiLayer::MouseScrollEvent));
-		dispatcher.Dispatch<KeyPressedEvent>(TF_BIND_EVENT_FN(ImGuiLayer::OnKeyPressedEvent));
-		dispatcher.Dispatch<KeyReleasedEvent>(TF_BIND_EVENT_FN(ImGuiLayer::ImGuiLayer::OnKeyReleaseEvent));
-		dispatcher.Dispatch<KeyTypedEvent>(TF_BIND_EVENT_FN(ImGuiLayer::ImGuiLayer::OnKeyTypedEvent));
-		dispatcher.Dispatch<WindowResizeEvent>(TF_BIND_EVENT_FN(ImGuiLayer::OnWindowsResizedEvent));
-
-
-	}
-
-	bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[e.GetMouseButton()] = true;	
-		return false;
-	}
-	bool ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[e.GetMouseButton()] = false;
-		return false;
-	}
-	bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MousePos = ImVec2(e.GetX(), e.GetY());
-		return false; 
-	}
-	bool ImGuiLayer::MouseScrollEvent(MouseScrolledEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseWheelH += e.GetXOffset();
-		io.MouseWheel += e.GetYOffset();
-		return false;
-
-	}
-	bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuiKey key = MapKey(e.GetKeyCode());
-		if (key != ImGuiKey_None)
-			io.AddKeyEvent(key, true);
-		return false;
-	}
-	bool ImGuiLayer::OnKeyReleaseEvent(KeyReleasedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuiKey key = MapKey(e.GetKeyCode());
-		if (key != ImGuiKey_None)
-			io.AddKeyEvent(key, false);
-		return false;
-
-	}
-	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.AddInputCharacter((ImWchar)e.GetKeyCode());
-		 
-		return false;
-	}
-	bool ImGuiLayer::OnWindowsResizedEvent(WindowResizeEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();	
-		io.DisplaySize = ImVec2((float)e.GetWidth(), (float)e.GetHeight());
-		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
-		glViewport(0, 0, e.GetWidth(), e.GetHeight());
-		return false;
-
-	}
-
 
 
 
