@@ -83,8 +83,8 @@ namespace Tituf
 		ImGui::StyleColorsDark();
 		ImGuiIO& io = ImGui::GetIO(); 
 		//(void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable keyboard controls
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable keyboard controls
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable
 
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors; // We can honor GetMouseCursor() values (optional)
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;  // We can honor io.WantSetMousePos requests (optional, rarely used)
