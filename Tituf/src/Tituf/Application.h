@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "Tituf/LayerStack.h"
+#include "Tituf/ImGui/ImGuiLayer.h"	
 #include "Event/Event.h"
 #include "Window/TFWindow.h"
 
@@ -40,8 +41,8 @@ namespace Tituf
 	private:
 		TFWindow& m_Window = TFWindow::Get(); // always points to the singleton
 		bool running = true;
-		LayerStack m_LayerStack;
-
+		LayerStack m_LayerStack; 
+		ImGuiLayer* m_ImGuiLayer;
 		static Application* s_Instance;
 	};
 

@@ -36,8 +36,7 @@ class SandBoxApp : public Tituf::Application
 public:
 	SandBoxApp() 
 	{
-		PushLayer(new ExampleLayer());
-		PushOverlay(new Tituf::ImGuiLayer());
+		//PushLayer(new ExampleLayer());
 	};
 	~SandBoxApp() {};   
 

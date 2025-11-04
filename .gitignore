@@ -3,4 +3,5 @@
 /bin-int/
 *.user/
 *.vcxproj*/
-*.sln
+*.sln/
+SandBox/imgui.ini

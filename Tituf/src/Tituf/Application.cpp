@@ -13,6 +13,12 @@ namespace Tituf
 		TF_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
+		m_Window.Init();          // <--- init window
+		m_Window.InitGlewContext(); // <--- init OpenGL
+
+
+		m_ImGuiLayer = new ImGuiLayer();	
+		PushOverlay(m_ImGuiLayer);
 		// Create the window singleton
 		//TFWindow& window = TFWindow::Get();
 		std::cout << "Application created" << std::endl;
@@ -26,9 +32,9 @@ namespace Tituf
 		m_Window.SetAppEventCallback(std::bind(&Application::OnAppEvent, this, std::placeholders::_1));
 		m_Window.SetKeyEventCallback(std::bind(&Application::OnKeyEvent, this, std::placeholders::_1));
 		m_Window.SetMouseEventCallback(std::bind(&Application::OnMouseEvent, this, std::placeholders::_1));
-
-		m_Window.Init();
-		m_Window.InitGlewContext();
+		  
+		//m_Window.Init();
+		//m_Window.InitGlewContext();
 
 		while (running)
 		{
@@ -40,6 +46,12 @@ namespace Tituf
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
+
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();	
+			m_ImGuiLayer->End();
+
 
 			bool APressed = Input::IsKeyPressed(TF_KEY_TAB); // Example usage of Input
 			if (APressed)

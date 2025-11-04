@@ -2,8 +2,15 @@
 #include "TFWindow.h"
 
 
-void TFWindow::SetPixels(HDC& m_hdc)
+void TFWindow::SetPixels()
 {
+    if (!m_hWnd)
+    {
+        TF_CORE_ERROR("Window handle is null!");
+        return;
+    }
+
+    m_hdc = GetDC(m_hWnd);  // get HDC from the created window
     PIXELFORMATDESCRIPTOR pfd = {};
     pfd.nSize = sizeof(pfd);
     pfd.nVersion = 1;
@@ -14,19 +21,33 @@ void TFWindow::SetPixels(HDC& m_hdc)
     pfd.iLayerType = PFD_MAIN_PLANE;
 
     int pf = ChoosePixelFormat(m_hdc, &pfd);
-    SetPixelFormat(m_hdc, pf, &pfd);
+    if (!SetPixelFormat(m_hdc, pf, &pfd))
+    {
+        TF_CORE_ERROR("Failed toSetPixelFormat");
+    }
 }
+
 
 void TFWindow::InitGlewContext()
 {
-    m_hdc = GetDC(m_hWnd);
-    SetPixels(m_hdc);
+    SetPixels();
 
     m_hGLRC = wglCreateContext(m_hdc);
-    wglMakeCurrent(m_hdc, m_hGLRC);
+    if (!m_hGLRC)
+    { 
+        TF_CORE_ERROR("Failed to create OpenGL context");
+    }  
+     
+    if (!wglMakeCurrent(m_hdc, m_hGLRC)) 
+    {
+        TF_CORE_ERROR("wglMakeCurrent failed");
+    }
 
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
+
+    glViewport(0, 0, m_Data.Width, m_Data.Height);
+
     if (err != GLEW_OK)
         std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
 

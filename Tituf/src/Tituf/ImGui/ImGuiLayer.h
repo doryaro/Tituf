@@ -14,11 +14,21 @@ namespace Tituf
 		virtual ~ImGuiLayer();
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnImGuiRender() override {};
-	
+		virtual void OnImGuiRender() override ;
+		virtual void OnEvent(Event& event) override;
+
+		 
 		void Begin();
 		void End();
 	private:
+		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
+		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
+		bool OnMouseMovedEvent(MouseMovedEvent& e);
+		bool MouseScrollEvent(MouseScrolledEvent& e);
+		bool OnKeyPressedEvent(KeyPressedEvent& e);
+		bool OnKeyReleaseEvent(KeyReleasedEvent& e);
+		bool OnKeyTypedEvent(KeyTypedEvent& e);
+		bool OnWindowsResizedEvent(WindowResizeEvent& e);
 		float m_Time = 0.0f;
 		std::chrono::time_point<std::chrono::high_resolution_clock>	m_LastFrameTime;
 	};

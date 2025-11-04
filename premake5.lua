@@ -32,8 +32,7 @@ project "Tituf"
 
 		-- ImGui core + backend files
         "%{wks.location}/vendor/imgui/*.cpp",
-        "%{wks.location}/vendor/imgui/backends/imgui_impl_win32.cpp",
-        "%{wks.location}/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+        "%{wks.location}/vendor/imgui/backends/**.cpp",
 	}		
 
 	libdirs

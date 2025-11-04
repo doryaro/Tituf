@@ -28,7 +28,7 @@ public:
     ~TFWindow();
 
     bool ProcessMessages();
-    void SetPixels(HDC& hdc);
+    void SetPixels();
     void InitGlewContext();
     void SwapBuffers();
 
