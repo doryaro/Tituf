@@ -2,14 +2,18 @@
 
 
 #ifdef TF_PLATFORM_WINDOWS
+#if TF_DYNAMIC_LINK
 	#ifdef TF_BUILD_DLL 
 		#define TITUF_API __declspec(dllexport)
 	#else	
 		#define TITUF_API __declspec(dllimport)
 	#endif 
 #else
-	#error Tituf only supports Windows!	
+	#define TITUF_API
 #endif // TITUF_PLATFORM_WINDOWS
+#else
+	#error Tituf only supports Windows!	
+#endif
 
 
 #ifdef TF_DEBUG

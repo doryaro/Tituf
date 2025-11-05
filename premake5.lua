@@ -13,7 +13,7 @@ workspace "Tituf"
 
 project "Tituf"
 	location "Tituf"
-	kind "SharedLib"	
+	kind "StaticLib"	
 	language "C++"
 	cppdialect "C++20"	
 	targetdir("bin/" .. outputdir .. "/%{prj.name}")
@@ -59,12 +59,13 @@ project "Tituf"
 
 	defines
 	{
-		"GLEW_STATIC"
+		"GLEW_STATIC",
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	-- Windows-specific settings
 	filter "system:windows"
-		staticruntime "On"
+		staticruntime "on"
 		systemversion "latest"
 		buildoptions { "/utf-8" }
 		defines
@@ -84,15 +85,18 @@ project "Tituf"
 
 	filter "configurations:Debug"
 		defines "TF_DEBUG"
-		symbols "On"
+		runtime "Debug"
+		symbols "on" 
 
 	filter "configurations:Release"
 		defines "TF_RELEASE"
-		optimize "On"	
+		runtime "Release"
+		optimize "on"
 
-	filter "configurations:Dist"	
-		defines "TF_DIST"	
-		optimize "On"	
+	filter "configurations:Dist"
+		defines "TF_DIST"
+		runtime "Release"
+		optimize "on"	
 
 
 project "Sandbox"
@@ -132,7 +136,7 @@ project "Sandbox"
 	}  
 
 	filter "system:windows"
-		staticruntime "On"
+		staticruntime "on"
 		systemversion "latest"
 		buildoptions { "/utf-8" }
 		defines 
@@ -145,12 +149,12 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "TF_DEBUG"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "TF_RELEASE"
-		optimize "On"	
+		optimize "on"	
 
 	filter "configurations:Dist"	
 		defines "TF_DIST"	
-		optimize "On"
+		optimize "on"
