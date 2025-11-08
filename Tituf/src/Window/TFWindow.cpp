@@ -51,8 +51,10 @@ void TFWindow::InitGlewContext()
     if (err != GLEW_OK)
         std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    TF_TRACE("OpenGl Info");
+    std::cout << "   Vendor:" << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "   Renderer:" << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "   Version:" << glGetString(GL_VERSION) << std::endl;
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

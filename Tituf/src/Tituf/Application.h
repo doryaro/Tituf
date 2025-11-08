@@ -44,6 +44,10 @@ namespace Tituf
 		LayerStack m_LayerStack; 
 		ImGuiLayer* m_ImGuiLayer;
 		static Application* s_Instance;
+
+		unsigned int m_VertexArray;
+		unsigned int m_VertexBuffer;
+		unsigned int m_IndexBuffer;
 	};
 
 	// To be defined in CLIENT
