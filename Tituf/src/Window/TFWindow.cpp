@@ -1,6 +1,53 @@
 #include "tfpch.h"
 #include "TFWindow.h"
 
+void TFWindow::Init()
+{
+    const wchar_t CLASS_NAME[] = L"TitufWindowClass";
+    WNDCLASS wndClass = {};
+    wndClass.lpszClassName = CLASS_NAME;
+    wndClass.hInstance = m_hInstance;
+    wndClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+    wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wndClass.lpfnWndProc = WindowProc;
+
+    RegisterClass(&wndClass);
+
+    DWORD style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
+
+    if (!m_Config.Load(CONFIG_PATH))
+    {
+        TF_CORE_ERROR("Failed to load config.ini!");
+    }
+    m_Data.Width = m_Config.GetInt("Window", "Width", -1);
+    m_Data.Height = m_Config.GetInt("Window", "Height", -1);
+    m_Data.Title = m_Config.GetWString("Window", "Title", L"Null");
+
+
+    RECT rect;
+    rect.left = m_Config.GetInt("Rect", "left", -1);
+    rect.top = m_Config.GetInt("Rect", "top", -1);
+    rect.right = rect.left + m_Data.Width;  // width from Window section
+    rect.bottom = rect.top + m_Data.Height; // height from Window section
+    AdjustWindowRect(&rect, style, FALSE);
+
+    m_hWnd = CreateWindowEx(
+        0,
+        CLASS_NAME,
+        m_Data.Title.c_str(),
+        style,
+        rect.left,
+        rect.top,
+        rect.right - rect.left,
+        rect.bottom - rect.top,
+        NULL,
+        NULL,
+        m_hInstance,
+        nullptr // no longer pass 'this'
+    );
+
+    ShowWindow(m_hWnd, SW_SHOW);
+}
 
 void TFWindow::SetPixels()
 {
@@ -24,6 +71,53 @@ void TFWindow::SetPixels()
     if (!SetPixelFormat(m_hdc, pf, &pfd))
     {
         TF_CORE_ERROR("Failed toSetPixelFormat");
+    }
+}
+
+void TFWindow::InitImguiContext()
+{
+    // -----------------------
+    // Create ImGui separate window
+    // ----------------------- 
+    std::wstring Title = m_Config.GetWString("ImGuiWindow", "Title", L"Null");
+    m_hImGuiWnd = CreateAdditionalWindow(Title.c_str(), 800, 600);
+    m_hImGuiDC = GetDC(m_hImGuiWnd);
+
+    // Set pixel format for ImGui window
+    PIXELFORMATDESCRIPTOR pfd = {};
+    pfd.nSize = sizeof(pfd);
+    pfd.nVersion = 1;
+    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+    pfd.iPixelType = PFD_TYPE_RGBA;
+    pfd.cColorBits = 32;
+    pfd.cDepthBits = 24;
+    pfd.iLayerType = PFD_MAIN_PLANE;
+
+    int format = ChoosePixelFormat(m_hImGuiDC, &pfd);
+    SetPixelFormat(m_hImGuiDC, format, &pfd);
+
+    // Create OpenGL context for ImGui window
+    m_hImGuiRC = wglCreateContext(m_hImGuiDC);
+    if (!m_hImGuiRC)
+        TF_CORE_ERROR("Failed to create ImGui OpenGL context");
+
+    // Share resources with main context
+    if (!wglShareLists(m_hGLRC, m_hImGuiRC))
+        TF_CORE_ERROR("wglShareLists failed!"); 
+}
+
+void TFWindow::GlMakeCurrentImgui()
+{
+    if (!wglMakeCurrent(m_hImGuiDC, m_hImGuiRC))
+    {
+        TF_CORE_ERROR("GlMakeCurrentImgui failed");
+    }
+} 
+void TFWindow::GlMakeCurrent()
+{
+    if (!wglMakeCurrent(m_hdc, m_hGLRC))
+    {
+        TF_CORE_ERROR("GlMakeCurrent failed");
     }
 }
 
@@ -65,6 +159,10 @@ void TFWindow::SwapBuffers()
 {
     ::SwapBuffers(m_hdc);
 }
+void TFWindow::SwapBuffersImgui()
+{
+    ::SwapBuffers(m_hImGuiDC);
+} 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -182,53 +280,35 @@ void TFWindow::SetMouseEventCallback(const EventMouseCallbackFn& callback)
     m_Data.EventMouseCallback = callback;
 }
 
-void TFWindow::Init()
+
+
+HWND TFWindow::CreateAdditionalWindow(const wchar_t* title, int width, int height)
 {
-    const wchar_t CLASS_NAME[] = L"TitufWindowClass";
-    WNDCLASS wndClass = {};
-    wndClass.lpszClassName = CLASS_NAME;
-    wndClass.hInstance = m_hInstance;
-    wndClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-    wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wndClass.lpfnWndProc = WindowProc;
+    const wchar_t CLASS_NAME[] = L"TitufImGuiWindowClass";
 
-    RegisterClass(&wndClass);
+    WNDCLASS wc = {};
+    wc.lpfnWndProc = WindowProc;
+    wc.hInstance = m_hInstance;
+    wc.lpszClassName = CLASS_NAME;
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 
-    DWORD style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
+    RegisterClass(&wc);
 
-
-
-    if (!m_Config.Load(CONFIG_PATH))
-    {
-        TF_CORE_ERROR("Failed to load config.ini!");
-    }
-	m_Data.Width = m_Config.GetInt("Window","Width",-1);
-	m_Data.Height = m_Config.GetInt("Window", "Height",-1);
-
-    RECT rect;
-    rect.left = m_Config.GetInt("Rect","left",-1);
-    rect.top = m_Config.GetInt("Rect", "top", -1);
-    rect.right = rect.left + m_Data.Width;  // width from Window section
-    rect.bottom = rect.top + m_Data.Height; // height from Window section
-    AdjustWindowRect(&rect, style, FALSE);
-
-    m_hWnd = CreateWindowEx(
+    HWND hWnd = CreateWindowEx(
         0,
         CLASS_NAME,
-        L"Tituf Engine",
-        style,
-        rect.left,
-        rect.top,
-        rect.right - rect.left,
-        rect.bottom - rect.top,
-        NULL,
-        NULL,
-        m_hInstance,
-        nullptr // no longer pass 'this'
+        title,
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        width, height,
+        NULL, NULL, m_hInstance, NULL
     );
 
-    ShowWindow(m_hWnd, SW_SHOW);
+    ShowWindow(hWnd, SW_SHOW);
+    return hWnd;
 }
+
 
 TFWindow::TFWindow()
     : m_hInstance(GetModuleHandle(nullptr)), m_hWnd(nullptr)

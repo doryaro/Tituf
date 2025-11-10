@@ -11,6 +11,7 @@ namespace Tituf
 	{
 	public:
 		ImGuiLayer();
+		void InitImguiWindowData();
 		virtual ~ImGuiLayer();
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
@@ -31,5 +32,14 @@ namespace Tituf
 		bool OnWindowsResizedEvent(WindowResizeEvent& e);
 		float m_Time = 0.0f;
 		std::chrono::time_point<std::chrono::high_resolution_clock>	m_LastFrameTime;
+		Tituf::Config m_Config;
+
+		struct ImguiWindowData
+			{
+				std::wstring Title;
+				unsigned int Width;
+				unsigned int Height;
+			};
+		ImguiWindowData m_ImguiWindowData;
 	};
 }

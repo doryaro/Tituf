@@ -71,9 +71,22 @@ namespace Tituf
 	Tituf::ImGuiLayer::ImGuiLayer()
 		: Layer("ImGuiLayer")
 	{
+		InitImguiWindowData();
+	}   
+	
+	void Tituf::ImGuiLayer::InitImguiWindowData()
+	{
+		if (!m_Config.Load(CONFIG_PATH))
+		{
+			TF_CORE_ERROR("Failed to load config.ini!");
+		}
+		m_ImguiWindowData.Width = m_Config.GetInt("ImGuiWindow", "Width", -1);
+		m_ImguiWindowData.Height = m_Config.GetInt("ImGuiWindow", "Height", -1);
+		m_ImguiWindowData.Title = m_Config.GetWString("ImGuiWindow", "Title", L"Null");
 	}
 
-		Tituf::ImGuiLayer::~ImGuiLayer()
+
+	Tituf::ImGuiLayer::~ImGuiLayer()
 	{
 	}
 
@@ -90,7 +103,7 @@ namespace Tituf
 		ImGuiStyle& style = ImGui::GetStyle();
 		TFWindow& window = TFWindow::Get();
 
-		ImGui_ImplWin32_Init(window.GetHwnd()); // Pass your window	
+		ImGui_ImplWin32_Init(window.GetImGuiHwnd()); // Pass your Imgui window	
 		ImGui_ImplOpenGL3_Init("#version 330"); // or your GL version
 	} 
 
@@ -113,7 +126,7 @@ namespace Tituf
 		ImGuiIO& io = ImGui::GetIO();
 		TFWindow& window = TFWindow::Get();
 
-		io.DisplaySize = ImVec2((float)window.GetData().Width, (float)window.GetData().Height);
+		io.DisplaySize = ImVec2((float)m_ImguiWindowData.Width, (float)m_ImguiWindowData.Height);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

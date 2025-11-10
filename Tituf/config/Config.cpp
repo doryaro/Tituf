@@ -53,4 +53,17 @@ namespace Tituf
             return data[combined];
         return defaultValue;
     }
+    std::wstring Config::GetWString(const std::string& section, const std::string& key, const std::wstring& defaultValue)
+    {
+        std::string combined = section + "." + key;
+        auto it = data.find(combined);
+        if (it != data.end())
+        {
+            // Convert std::string (assume UTF-8/ASCII) to std::wstring
+            std::wstring wvalue(it->second.begin(), it->second.end());
+            return wvalue;
+        }
+        return defaultValue;
+    }
+
 }

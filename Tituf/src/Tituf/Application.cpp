@@ -15,7 +15,8 @@ namespace Tituf
 
 		m_Window.Init();          // <--- init window
 		m_Window.InitGlewContext(); // <--- init OpenGL
-
+		m_Window.InitImguiContext(); // <--- init Imgui
+		
 		glViewport(0, 0, m_Window.GetData().Width, m_Window.GetData().Height);
 
 		m_ImGuiLayer = new ImGuiLayer();	
@@ -96,11 +97,15 @@ namespace Tituf
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
+			m_Window.GlMakeCurrentImgui();
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
+			m_Window.SwapBuffersImgui();      // <--- swap buffers of the ImGui window
 
+
+			m_Window.GlMakeCurrent();
 
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

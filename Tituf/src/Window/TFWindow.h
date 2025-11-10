@@ -19,6 +19,7 @@ public:
     }
 
     void Init();
+    HWND CreateAdditionalWindow(const wchar_t* title, int width, int height);
     // Delete copy and move constructors
     TFWindow(const TFWindow& other) = delete;
     TFWindow& operator=(const TFWindow& other) = delete;
@@ -29,8 +30,13 @@ public:
 
     bool ProcessMessages();
     void SetPixels();
+    void InitImguiContext();
+    void GlMakeCurrentImgui();
+    void GlMakeCurrent();
     void InitGlewContext();
     void SwapBuffers();
+    void SwapBuffersImgui();
+
 
     using EventAppCallbackFn = std::function<void(Tituf::Event&)>;
     using EventKeyCallbackFn = std::function<void(Tituf::Event&)>;
@@ -42,7 +48,8 @@ public:
 
 
     HDC GetHdc() const { return m_hdc; }
-    HWND GetHwnd() const { return m_hWnd; } // Add this for ImGui
+    HWND GetHwnd() const { return m_hWnd; } // for Window
+    HWND GetImGuiHwnd() const { return m_hImGuiWnd; } // for ImGui
 
 	//virtual void* GetNativeWindow() const { return m_hWnd; }   for cross-platform compatibility 
      
@@ -50,13 +57,20 @@ private:
     TFWindow(); // private constructor
 
     HINSTANCE m_hInstance;
+    
+    //main window
     HWND m_hWnd;
     HDC m_hdc = nullptr;
     HGLRC m_hGLRC = nullptr;
-	Tituf::Config m_Config;
+    //imgui window
+    HWND m_hImGuiWnd = nullptr;
+    HDC m_hImGuiDC = nullptr;
+    HGLRC m_hImGuiRC = nullptr;
+
+    Tituf::Config m_Config;
     struct WindowData
     {
-        std::string Title;
+        std::wstring Title;
         unsigned int Width;
         unsigned int Height;
         EventAppCallbackFn EventAppCallback;
