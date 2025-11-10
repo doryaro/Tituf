@@ -4,6 +4,7 @@
 #include "Tituf/ImGui/ImGuiLayer.h"	
 #include "Event/Event.h"
 #include "Window/TFWindow.h"
+#include "Tituf/Renderer/Shader.h"
 
 namespace Tituf
 {
@@ -48,6 +49,7 @@ namespace Tituf
 		unsigned int m_VertexArray;
 		unsigned int m_VertexBuffer;
 		unsigned int m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 	};
 
 	// To be defined in CLIENT

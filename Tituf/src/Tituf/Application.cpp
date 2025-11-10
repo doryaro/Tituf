@@ -16,6 +16,7 @@ namespace Tituf
 		m_Window.Init();          // <--- init window
 		m_Window.InitGlewContext(); // <--- init OpenGL
 
+		glViewport(0, 0, m_Window.GetData().Width, m_Window.GetData().Height);
 
 		m_ImGuiLayer = new ImGuiLayer();	
 		PushOverlay(m_ImGuiLayer);
@@ -48,7 +49,29 @@ namespace Tituf
 		};
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+		std::string vertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+	
+			void main()
+			{
+				gl_Position = vec4(a_Position, 1.0);
+			}  
+		)";
 
+		std::string fragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+	
+			void main()
+			{
+				color = vec4(0.8, 0.2, 0.3, 1.0);
+			}  
+		)";
+
+		m_Shader = std::make_unique<Shader>(vertexSrc, fragmentSrc);
 
 	}
 
@@ -69,20 +92,28 @@ namespace Tituf
 			if (!m_Window.ProcessMessages())
 				break;
 
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);	
-
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
-				layer->OnImGuiRender();	
+				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
+
+
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			m_Shader->Bind();
+
+			glBindVertexArray(m_VertexArray);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			 
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				std::cout << "GL ERROR: " << err << std::endl;
+
 
 
 			bool APressed = Input::IsKeyPressed(TF_KEY_TAB); // Example usage of Input
@@ -107,6 +138,7 @@ namespace Tituf
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
 		TF_CORE_TRACE("Handled resize: {0}x{1}", e.GetWidth(), e.GetHeight());
+		glViewport(0, 0, e.GetWidth(), e.GetHeight());
 		return true;
 	}
 

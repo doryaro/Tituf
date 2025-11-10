@@ -19,9 +19,11 @@
 #ifdef TF_DEBUG
 	#define TF_ASSERT(x)        { if (!(x)) { TF_ERROR("Assertion Failed: {0}", #x); __debugbreak(); } }
 	#define TF_CORE_ASSERT(x)   { if (!(x)) { TF_CORE_ERROR("Assertion Failed: {0}", #x); __debugbreak(); } }
+	#define TF_CORE_ASSERT_INFO(x,y)   { if (!(x)) { TF_CORE_ERROR("Assertion Failed: {0}", #x, #y); __debugbreak(); } }
 #else
 	#define TF_ASSERT(x)
 	#define TF_CORE_ASSERT(x)
+	#define TF_CORE_ASSERT_INFO(x,y)
 #endif
  
 

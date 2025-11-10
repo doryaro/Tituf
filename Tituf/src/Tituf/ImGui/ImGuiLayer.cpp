@@ -141,6 +141,8 @@ namespace Tituf
 		static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		windowFlags |= ImGuiWindowFlags_NoBackground; // add this
+
 		if (opt_fullscreen)
 		{
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -156,6 +158,8 @@ namespace Tituf
 
 		if (!opt_padding)
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::SetNextWindowBgAlpha(0.3f);
 
 		ImGui::Begin("DockSpace Demo", &dockspaceOpen, windowFlags);
 

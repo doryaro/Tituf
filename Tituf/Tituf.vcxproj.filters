@@ -16,6 +16,9 @@
     <Filter Include="src\Tituf\ImGui">
       <UniqueIdentifier>{B2243B4F-1EB0-A813-27C1-2B0893CB0414}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Tituf\Renderer">
+      <UniqueIdentifier>{2E26BE9D-1A0A-7FF3-836A-79466F6D6975}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Window">
       <UniqueIdentifier>{74C3D837-607B-1A85-C982-F3E0B559B575}</UniqueIdentifier>
     </Filter>
@@ -92,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="src\Tituf\Log.h">
       <Filter>src\Tituf</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Renderer\Shader.h">
+      <Filter>src\Tituf\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Window\TFWindow.h">
       <Filter>src\Window</Filter>
@@ -1402,6 +1408,9 @@
     </ClCompile>
     <ClCompile Include="src\Tituf\Log.cpp">
       <Filter>src\Tituf</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\Shader.cpp">
+      <Filter>src\Tituf\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Window\TFWindow.cpp">
       <Filter>src\Window</Filter>
