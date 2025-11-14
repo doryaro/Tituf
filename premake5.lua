@@ -60,7 +60,8 @@ project "Tituf"
 	defines
 	{
 		"GLEW_STATIC",
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
+        'PROJECT_ROOT="' .. os.getcwd() .. '"'
 	}
 
 	-- Windows-specific settings

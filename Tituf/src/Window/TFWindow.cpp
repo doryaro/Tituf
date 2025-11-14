@@ -17,7 +17,7 @@ void TFWindow::Init()
 
     if (!m_Config.Load(CONFIG_PATH))
     {
-        TF_CORE_ERROR("Failed to load config.ini!");
+        TF_CORE_ASSERT_INFO(false, "Failed to load config.ini! CONFIG_PATH: " + std::string(CONFIG_PATH));
     }
     m_Data.Width = m_Config.GetInt("Window", "Width", -1);
     m_Data.Height = m_Config.GetInt("Window", "Height", -1);

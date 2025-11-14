@@ -78,7 +78,7 @@ namespace Tituf
 	{
 		if (!m_Config.Load(CONFIG_PATH))
 		{
-			TF_CORE_ERROR("Failed to load config.ini!");
+			TF_CORE_ASSERT_INFO(false, "Failed to load config.ini! CONFIG_PATH: " + std::string(CONFIG_PATH));
 		}
 		m_ImguiWindowData.Width = m_Config.GetInt("ImGuiWindow", "Width", -1);
 		m_ImguiWindowData.Height = m_Config.GetInt("ImGuiWindow", "Height", -1);

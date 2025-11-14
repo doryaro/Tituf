@@ -76,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;PROJECT_ROOT="C:/Users/dorya/OneDrive/Desktop/Tituf";TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -103,7 +103,7 @@ powershell -Command "Copy-Item -Path '../bin/Debug-windows-x86_64/Tituf/Tituf.li
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;PROJECT_ROOT="C:/Users/dorya/OneDrive/Desktop/Tituf";TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -134,7 +134,7 @@ powershell -Command "Copy-Item -Path '../bin/Release-windows-x86_64/Tituf/Tituf.
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;PROJECT_ROOT="C:/Users/dorya/OneDrive/Desktop/Tituf";TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

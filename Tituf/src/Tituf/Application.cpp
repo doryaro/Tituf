@@ -10,7 +10,7 @@ namespace Tituf
 	
 	Application::Application()
 	{
-		TF_CORE_ASSERT(!s_Instance) // Application already exists! 
+		TF_CORE_ASSERT(!s_Instance); // Application already exists! 
 		s_Instance = this;
 
 		m_Window.Init();          // <--- init window

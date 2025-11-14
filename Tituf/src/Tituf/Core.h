@@ -1,5 +1,7 @@
 #pragma once
 
+// CONFIG_PATH relative to the project root
+#define CONFIG_PATH PROJECT_ROOT "/Tituf" "/config/config.ini"
 
 #ifdef TF_PLATFORM_WINDOWS
 #if TF_DYNAMIC_LINK
@@ -17,14 +19,15 @@
 
 
 #ifdef TF_DEBUG
-	#define TF_ASSERT(x)        { if (!(x)) { TF_ERROR("Assertion Failed: {0}", #x); __debugbreak(); } }
-	#define TF_CORE_ASSERT(x)   { if (!(x)) { TF_CORE_ERROR("Assertion Failed: {0}", #x); __debugbreak(); } }
-	#define TF_CORE_ASSERT_INFO(x,y)   { if (!(x)) { TF_CORE_ERROR("Assertion Failed: {0}", #x, #y); __debugbreak(); } }
+	#define TF_ASSERT(x) do { if (!(x)) { TF_ERROR("Assertion Failed: {0}", #x); __debugbreak(); } } while(0)
+	#define TF_CORE_ASSERT(x) do { if (!(x)) { TF_CORE_ERROR("Assertion Failed: {0}", #x); __debugbreak(); } } while(0)
+	#define TF_CORE_ASSERT_INFO(x,y) do { if (!(x)) { TF_CORE_ERROR("Assertion Failed: {0}, Info: {1}", #x, y); __debugbreak(); } } while(0)
 #else
-	#define TF_ASSERT(x)
-	#define TF_CORE_ASSERT(x)
-	#define TF_CORE_ASSERT_INFO(x,y)
+	#define TF_ASSERT(x) do { (void)(x); } while(0)
+	#define TF_CORE_ASSERT(x) do { (void)(x); } while(0)
+	#define TF_CORE_ASSERT_INFO(x,y) do { (void)(x); (void)(y); } while(0)
 #endif
+
  
 
 
@@ -39,8 +42,6 @@
 #define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
 #endif
 
-// CONFIG_PATH relative to the project root
-#define CONFIG_PATH "../Tituf/config/config.ini" 
 
 
 #pragma once
