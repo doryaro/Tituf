@@ -7,6 +7,12 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Tituf">
       <UniqueIdentifier>{88A9E7B3-F413-9C2A-3D52-4DD0A9FB797F}</UniqueIdentifier>
     </Filter>
@@ -57,6 +63,9 @@
     <ClInclude Include="config\Config.h">
       <Filter>config</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tituf.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -95,6 +104,12 @@
     </ClInclude>
     <ClInclude Include="src\Tituf\Log.h">
       <Filter>src\Tituf</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Renderer\Buffer.h">
+      <Filter>src\Tituf\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Renderer\Renderer.h">
+      <Filter>src\Tituf\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Tituf\Renderer\Shader.h">
       <Filter>src\Tituf\Renderer</Filter>
@@ -1391,6 +1406,9 @@
     <ClCompile Include="config\Config.cpp">
       <Filter>config</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Tituf\Application.cpp">
       <Filter>src\Tituf</Filter>
     </ClCompile>
@@ -1408,6 +1426,12 @@
     </ClCompile>
     <ClCompile Include="src\Tituf\Log.cpp">
       <Filter>src\Tituf</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\Buffer.cpp">
+      <Filter>src\Tituf\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\Renderer.cpp">
+      <Filter>src\Tituf\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Tituf\Renderer\Shader.cpp">
       <Filter>src\Tituf\Renderer</Filter>

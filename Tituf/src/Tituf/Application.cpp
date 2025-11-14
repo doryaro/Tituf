@@ -28,27 +28,28 @@ namespace Tituf
 		glGenVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);
 
-		glGenBuffers(1, &m_VertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-
 		float vertices[] = {
 			-0.5f, -0.5f, 0.0f,
 			 0.5f, -0.5f, 0.0f,
 			 0.0f,  0.5f, 0.0f
 		};
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
+		m_VertexBuffer->Bind();  
+
+		 
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-		
-		glGenBuffers(1, &m_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);	
+		 
 
 		unsigned int indices[] = {
 			0, 1, 2
-		};
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		};   
+
+		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+
+
 
 		std::string vertexSrc = R"(
 			#version 330 core
@@ -84,10 +85,7 @@ namespace Tituf
 		m_Window.SetAppEventCallback(std::bind(&Application::OnAppEvent, this, std::placeholders::_1));
 		m_Window.SetKeyEventCallback(std::bind(&Application::OnKeyEvent, this, std::placeholders::_1));
 		m_Window.SetMouseEventCallback(std::bind(&Application::OnMouseEvent, this, std::placeholders::_1));
-		  
-		//m_Window.Init();
-		//m_Window.InitGlewContext();
-
+		     
 		while (running)
 		{
 			if (!m_Window.ProcessMessages())
@@ -111,9 +109,9 @@ namespace Tituf
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			m_Shader->Bind();
-
+			
 			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 			 
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
@@ -180,7 +178,34 @@ namespace Tituf
 
 	bool Application::OnMouseMovedEvent(MouseMovedEvent& e) { return true; }
  
-	bool Application::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
+
+	bool Application::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e)
+	{
+		// Get mouse position in screen coordinates
+		POINT cursorPos;
+		GetCursorPos(&cursorPos); // screen coordinates
+
+		// Check which window the click was in
+		HWND clickedWnd = WindowFromPoint(cursorPos);
+
+		if (clickedWnd == m_Window.GetHwnd())
+		{
+			TF_CORE_INFO("Mouse clicked in MAIN window: button={0}, x={1}, y={2}",
+				e.GetMouseButton(), cursorPos.x, cursorPos.y);
+		}
+		else if (clickedWnd == m_Window.GetImGuiHwnd())
+		{
+			TF_CORE_INFO("Mouse clicked in IMGUI window: button={0}, x={1}, y={2}",
+				e.GetMouseButton(), cursorPos.x, cursorPos.y);
+		}
+		else
+		{
+			TF_CORE_INFO("Mouse clicked in OTHER window: button={0}, x={1}, y={2}",
+				e.GetMouseButton(), cursorPos.x, cursorPos.y);
+		}
+
+		return true;
+	}
 	bool Application::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e) { TF_CORE_TRACE("{0}", e.ToString()); return true; }
 
 	void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); layer->OnAttach(); }

@@ -162,6 +162,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="config\Config.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Tituf.h" />
     <ClInclude Include="src\Tituf\Application.h" />
     <ClInclude Include="src\Tituf\Core.h" />
@@ -175,6 +176,8 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClInclude Include="src\Tituf\Layer.h" />
     <ClInclude Include="src\Tituf\LayerStack.h" />
     <ClInclude Include="src\Tituf\Log.h" />
+    <ClInclude Include="src\Tituf\Renderer\Buffer.h" />
+    <ClInclude Include="src\Tituf\Renderer\Renderer.h" />
     <ClInclude Include="src\Tituf\Renderer\Shader.h" />
     <ClInclude Include="src\Window\TFWindow.h" />
     <ClInclude Include="src\Window\WindowsInput.h" />
@@ -608,12 +611,15 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="config\Config.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Tituf\Application.cpp" />
     <ClCompile Include="src\Tituf\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Tituf\Input.cpp" />
     <ClCompile Include="src\Tituf\Layer.cpp" />
     <ClCompile Include="src\Tituf\LayerStack.cpp" />
     <ClCompile Include="src\Tituf\Log.cpp" />
+    <ClCompile Include="src\Tituf\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Tituf\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Tituf\Renderer\Shader.cpp" />
     <ClCompile Include="src\Window\TFWindow.cpp" />
     <ClCompile Include="src\Window\WindowsInput.cpp" />

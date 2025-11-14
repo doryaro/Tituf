@@ -5,6 +5,9 @@
 #include "Event/Event.h"
 #include "Window/TFWindow.h"
 #include "Tituf/Renderer/Shader.h"
+#include "Tituf/Renderer/Buffer.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
+
 
 namespace Tituf
 {
@@ -46,10 +49,10 @@ namespace Tituf
 		ImGuiLayer* m_ImGuiLayer;
 		static Application* s_Instance;
 
-		unsigned int m_VertexArray;
-		unsigned int m_VertexBuffer;
-		unsigned int m_IndexBuffer;
+		unsigned int m_VertexArray; 
 		std::unique_ptr<Shader> m_Shader;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
+		std::unique_ptr<IndexBuffer> m_IndexBuffer;
 	};
 
 	// To be defined in CLIENT
