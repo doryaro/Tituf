@@ -5,31 +5,64 @@
 
 namespace Tituf
 {
+	BufferLayout::BufferLayout()
+		: m_Elements({}), m_Stride(0)
+	{
+	}
+	BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements)
+		: m_Elements(elements), m_Stride(0)
+	{
+		CalculateOffsetsAndStride();
+	}
+
+	BufferLayout::BufferLayout(std::vector<BufferElement> elements)
+		: m_Elements(elements), m_Stride(0)
+	{
+		CalculateOffsetsAndStride();
+	}
+
+	void BufferLayout::CalculateOffsetsAndStride()
+	{
+		uint32_t offset = 0;
+		m_Stride = 0;
+		for (auto& element : m_Elements)
+		{
+			element.Offset = offset;
+			offset += element.Size;
+		}
+		m_Stride = offset;
+	}
+
 	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::None:
 			{
-				TF_CORE_ASSERT(false, "None RenderAPI not suppored!");
+				TF_CORE_ASSERT_INFO(false, "None RenderAPI not suppored!");
 				return nullptr;
 			}
 			case RendererAPI::OpenGL:
 			{
 				return new OpenGLVertexBuffer(vertices, size);
 			}
+			case RendererAPI::Vulkan:
+			{
+				TF_CORE_ASSERT_INFO(false, "Vulkan RenderAPI not suppored!");
+				return nullptr;
+			}
 			case RendererAPI::Direct3D:
 			{
-				TF_CORE_ASSERT(false, "Direct3D RenderAPI not suppored!");
+				TF_CORE_ASSERT_INFO(false, "Direct3D RenderAPI not suppored!");
 				return nullptr;
 			}
 			case RendererAPI::Metal:
 			{
-				TF_CORE_ASSERT(false, "Metal RenderAPI not suppored!");
+				TF_CORE_ASSERT_INFO(false, "Metal RenderAPI not suppored!");
 				return nullptr;
-			}
+			}  
 		}
-		TF_CORE_ASSERT(false, "unkown RenderAPI!");
+		TF_CORE_ASSERT_INFO(false, "unkown RenderAPI!");
 		return nullptr;
 	}
 
@@ -39,7 +72,7 @@ namespace Tituf
 		{
 			case RendererAPI::None:
 			{
-				TF_CORE_ASSERT(false, "None RenderAPI not suppored!");
+				TF_CORE_ASSERT_INFO(false, "None RenderAPI not suppored!");
 				return nullptr;
 			}
 			case RendererAPI::OpenGL: 
@@ -48,16 +81,17 @@ namespace Tituf
 			}
 			case RendererAPI::Direct3D:
 			{
-				TF_CORE_ASSERT(false, "Direct3D RenderAPI not suppored!");
+				TF_CORE_ASSERT_INFO(false, "Direct3D RenderAPI not suppored!");
 				return nullptr;
 			}
 			case RendererAPI::Metal:
 			{
-				TF_CORE_ASSERT(false, "Metal RenderAPI not suppored!");
+				TF_CORE_ASSERT_INFO(false, "Metal RenderAPI not suppored!");
 				return nullptr;
 			}
 		}
-		TF_CORE_ASSERT(false, "unkown RenderAPI!");
+		TF_CORE_ASSERT_INFO(false, "unkown RenderAPI!");
 		return nullptr;
 	}
+
 }

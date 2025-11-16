@@ -71,12 +71,12 @@ private:
     struct WindowData
     {
         std::wstring Title;
-        unsigned int Width;
-        unsigned int Height;
+        unsigned int Width = 0;
+        unsigned int Height = 0;
         EventAppCallbackFn EventAppCallback;
         EventMouseCallbackFn EventMouseCallback;
         EventKeyCallbackFn EventKeyCallback;
-    };
+    };   
 
     WindowData m_Data;
 public:

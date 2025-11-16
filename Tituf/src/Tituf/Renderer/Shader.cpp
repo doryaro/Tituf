@@ -4,6 +4,7 @@
 namespace Tituf  
 {
 	Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
+		: m_Renderer_ID(0)
 	{
 			  
 		// Create an empty vertex shader handle
