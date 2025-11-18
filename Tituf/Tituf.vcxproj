@@ -162,6 +162,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="config\Config.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Tituf.h" />
     <ClInclude Include="src\Tituf\Application.h" />
@@ -601,6 +602,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClInclude Include="vendor\glm\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="src\Tituf\Renderer\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp" />
@@ -611,6 +613,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="config\Config.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Tituf\Application.cpp" />
     <ClCompile Include="src\Tituf\ImGui\ImGuiLayer.cpp" />
@@ -626,6 +629,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="src\tfpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\config.ini" />

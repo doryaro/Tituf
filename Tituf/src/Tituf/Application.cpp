@@ -8,25 +8,7 @@ namespace Tituf
 {
 	Application* Application::s_Instance = nullptr;
 	
-	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
-	{
-		switch (type)
-		{
-			case Tituf::ShaderDataType::Float:  return GL_FLOAT;
-			case Tituf::ShaderDataType::Float2: return GL_FLOAT;
-			case Tituf::ShaderDataType::Float3: return GL_FLOAT;
-			case Tituf::ShaderDataType::Float4: return GL_FLOAT;
-			case Tituf::ShaderDataType::Mat3:   return GL_FLOAT;
-			case Tituf::ShaderDataType::Mat4:   return GL_FLOAT;
-			case Tituf::ShaderDataType::Int:    return  GL_INT;
-			case Tituf::ShaderDataType::Int2:   return GL_INT;
-			case Tituf::ShaderDataType::Int3:   return GL_INT; 
-			case Tituf::ShaderDataType::Int4:   return GL_INT;
-			case Tituf::ShaderDataType::Bool:   return GL_BOOL;
-		}
-		TF_CORE_ASSERT_INFO(false, "Unknow ShaderDataType!");
-		return 0;
-	}
+
 
 	Application::Application()
 	{
@@ -45,8 +27,7 @@ namespace Tituf
 		//TFWindow& window = TFWindow::Get();
 		std::cout << "Application created" << std::endl;
 
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
+		m_VertexArray = std::shared_ptr<VertexArray>(VertexArray::Create());
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f ,0.8f, 1.0f,
@@ -54,39 +35,51 @@ namespace Tituf
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f ,0.2f, 1.0f
 		};
 
-		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
+		m_VertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
 		m_VertexBuffer->Bind();  
 
 		BufferLayout layout = {
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float4, "a_Color"},
 		};
-
 		m_VertexBuffer->SetLayout(layout);
-
-		 
-		uint32_t index = 0;
-		for (const auto& element : m_VertexBuffer->GetLayout())
-		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
-				element.GetElementCount(),
-				ShaderDataTypeToOpenGLBaseType(element.Type),
-				element.Normalized ? GL_TRUE : GL_FALSE,
-				layout.GetStride(),
-				(const void*)(uintptr_t)element.Offset);
-				index++;
-		}
-
-		 
-
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		
 		unsigned int indices[] = {
 			0, 1, 2
 		};   
 
-		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_IndexBuffer = std::shared_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 
+		float squareVertices[] = {
+			// position            // color
+			-0.75f, -0.75f, 0.0f,   1,0,0,1,
+			 0.75f, -0.75f, 0.0f,   0,1,0,1,
+			 0.75f,  0.75f, 0.0f,   0,0,1,1,
+			-0.75f,  0.75f, 0.0f,   1,1,0,1
+		};
+
+
+		m_SquareVB = std::shared_ptr<VertexBuffer>(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+
+		BufferLayout squareVBLayout = {
+			{ShaderDataType::Float3, "a_Position"},
+			{ShaderDataType::Float4, "a_Color"}
+		};
+
+		m_SquareVB->SetLayout(squareVBLayout);
+		m_SquareVA = std::shared_ptr<VertexArray>(VertexArray::Create());
+		m_SquareVA->AddVertexBuffer(m_SquareVB);
+
+		unsigned int squareIndices[6] = {
+			0, 1, 2, 2, 3, 0
+		};
+
+		m_SquareIB = std::shared_ptr<IndexBuffer>(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		m_SquareVA->SetIndexBuffer(m_SquareIB);
+		 
 
 		std::string vertexSrc = R"(
 			#version 330 core
@@ -122,6 +115,39 @@ namespace Tituf
 
 		m_Shader = std::make_unique<Shader>(vertexSrc, fragmentSrc);
 
+		std::string blueShaderVertexSrc = R"(
+		#version 330 core
+    
+		layout(location = 0) in vec3 a_Position;
+		layout(location = 1) in vec4 a_Color;
+
+		out vec3 v_Position;
+
+		void main() {
+			v_Position = a_Position;
+			gl_Position = vec4(a_Position, 1.0);
+		}
+)";
+
+		std::string blueShaderFragmentSrc = R"(
+		#version 330 core
+
+		layout(location = 0) out vec4 color;
+
+		in vec3 v_Position;
+
+		void main()
+		{
+			float blue = 0.5 + v_Position.y * 0.5; // Blue changes with Y
+			float green = 0.2 + v_Position.x * 0.3; // small green variation with X
+			float red = 0.1;                        // small constant red
+			color = vec4(red, green, blue, 1.0);
+		}
+)";
+
+
+		m_BlueShader = std::make_unique<Shader>(blueShaderVertexSrc, blueShaderFragmentSrc);
+
 	}
 
 	Application::~Application() = default;
@@ -152,20 +178,29 @@ namespace Tituf
 
 			m_Window.GlMakeCurrent();
 
+
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+			m_BlueShader->Bind();
+			m_SquareVA->Bind();
+			glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			     
+
 			m_Shader->Bind();
-			
-			glBindVertexArray(m_VertexArray);
+			m_VertexArray->Bind();
 			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-			 
+			
+
+
+			// Errors
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				std::cout << "GL ERROR: " << err << std::endl;
+			
 
-
-
+			//Input check
 			bool APressed = Input::IsKeyPressed(TF_KEY_TAB); // Example usage of Input
 			if (APressed)
 			{

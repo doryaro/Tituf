@@ -6,6 +6,7 @@
 #include "Window/TFWindow.h"
 #include "Tituf/Renderer/Shader.h"
 #include "Tituf/Renderer/Buffer.h"
+#include "Tituf/Renderer/VertexArray.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 
@@ -49,10 +50,18 @@ namespace Tituf
 		ImGuiLayer* m_ImGuiLayer;
 		static Application* s_Instance;
 
-		unsigned int m_VertexArray; 
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexBuffer> m_VertexBuffer;
+		std::shared_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<VertexArray> m_VertexArray;
+
+		std::shared_ptr<Shader> m_BlueShader;
+		std::shared_ptr<VertexArray> m_SquareVA;
+		std::shared_ptr<VertexBuffer> m_SquareVB;
+		std::shared_ptr<IndexBuffer> m_SquareIB;
+
+
+
 	};
 
 	// To be defined in CLIENT
