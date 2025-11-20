@@ -1,5 +1,5 @@
 #include "tfpch.h"
-#include "VertexArray.h"
+#include "Renderer.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Tituf
@@ -8,26 +8,26 @@ namespace Tituf
 	{   
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 		{
 			TF_CORE_ASSERT_INFO(false, "None RenderAPI not suppored!");
 			return nullptr;
 		}
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 		{
 			return new OpenGLVertexArray();
 		}
-		case RendererAPI::Vulkan:
+		case RendererAPI::API::Vulkan:
 		{
 			TF_CORE_ASSERT_INFO(false, "Vulkan RenderAPI not suppored!");
 			return nullptr;
 		}
-		case RendererAPI::Direct3D:
+		case RendererAPI::API::Direct3D:
 		{
 			TF_CORE_ASSERT_INFO(false, "Direct3D RenderAPI not suppored!");
 			return nullptr;
 		}
-		case RendererAPI::Metal:
+		case RendererAPI::API::Metal:
 		{
 			TF_CORE_ASSERT_INFO(false, "Metal RenderAPI not suppored!");
 			return nullptr;

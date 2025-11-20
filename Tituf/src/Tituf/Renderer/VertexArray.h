@@ -1,6 +1,6 @@
 #pragma once
 #include "Tituf/Renderer/Buffer.h"
-#include "Tituf/Renderer/Renderer.h"
+//#include "Tituf/Renderer/Renderer.h"
 #include "memory.h"
 
 namespace Tituf
@@ -8,6 +8,7 @@ namespace Tituf
 	class VertexArray
 	{
 	public:  
+		//VertexArray() {}
 		virtual ~VertexArray() {}
 
 		virtual void Bind() const = 0;

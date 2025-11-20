@@ -4,6 +4,9 @@
 #include "Log.h"
 #include "ImGui/ImGuiLayer.h"
 #include "Input.h"
+#include "Tituf/Renderer/Renderer.h"
+
+
 namespace Tituf
 {
 	Application* Application::s_Instance = nullptr;
@@ -178,21 +181,17 @@ namespace Tituf
 
 			m_Window.GlMakeCurrent();
 
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
 
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+			Renderer::BeginScene();
 			m_BlueShader->Bind();
-			m_SquareVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-			     
-
+			Renderer::Submit(m_SquareVA);
 			m_Shader->Bind();
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-			
-
+			Renderer::Submit(m_VertexArray);
+			Renderer::EndScene();
+			  
 
 			// Errors
 			GLenum err = glGetError();

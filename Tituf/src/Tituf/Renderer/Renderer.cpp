@@ -4,10 +4,18 @@
 
 namespace Tituf
 {
-	RendererAPI Renderer::s_RendererAPI = RendererAPI::OpenGL;
-
-	RendererAPI Renderer::GetAPI()
+	void Renderer::BeginScene()
 	{
-		return s_RendererAPI;
 	}
+
+	void Renderer::EndScene()
+	{
+	}
+
+	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray)
+	{
+		vertexArray->Bind();
+		RenderCommand::DrawIndexed(vertexArray);
+	}
+
 }
