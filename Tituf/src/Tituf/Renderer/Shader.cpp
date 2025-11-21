@@ -1,6 +1,8 @@
 #include "tfpch.h"
 #include "Shader.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Tituf  
 {
 	Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
@@ -128,6 +130,14 @@ namespace Tituf
 	void Shader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+
+	void Shader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
+	{
+		GLint location = glGetUniformLocation(m_Renderer_ID, name.c_str());
+		TF_CORE_ASSERT_INFO(location != -1, "Uniform location not found!");
+
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 

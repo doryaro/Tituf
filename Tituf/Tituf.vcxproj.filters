@@ -1395,6 +1395,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tituf\Renderer\OrthographicCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp">
@@ -1475,6 +1476,7 @@
     <ClCompile Include="src\tfpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\OrthographicCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\config.ini">

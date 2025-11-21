@@ -7,6 +7,7 @@
 #include "Tituf/Renderer/Shader.h"
 #include "Tituf/Renderer/Buffer.h"
 #include "Tituf/Renderer/VertexArray.h"
+#include "Tituf/Renderer/OrthographicCamera.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 
@@ -60,7 +61,7 @@ namespace Tituf
 		std::shared_ptr<VertexBuffer> m_SquareVB;
 		std::shared_ptr<IndexBuffer> m_SquareIB;
 
-
+		OrthographicCamera m_Camera;
 
 	};
 
