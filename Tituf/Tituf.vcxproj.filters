@@ -1396,6 +1396,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Tituf\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\Tituf\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp">

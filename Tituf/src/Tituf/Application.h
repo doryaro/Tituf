@@ -9,6 +9,7 @@
 #include "Tituf/Renderer/VertexArray.h"
 #include "Tituf/Renderer/OrthographicCamera.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Tituf/Core/Timestep.h"
 
 
 namespace Tituf
@@ -50,18 +51,8 @@ namespace Tituf
 		LayerStack m_LayerStack; 
 		ImGuiLayer* m_ImGuiLayer;
 		static Application* s_Instance;
+		float m_LastFrameTime = 0.0f;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexBuffer> m_VertexBuffer;
-		std::shared_ptr<IndexBuffer> m_IndexBuffer;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexArray> m_SquareVA;
-		std::shared_ptr<VertexBuffer> m_SquareVB;
-		std::shared_ptr<IndexBuffer> m_SquareIB;
-
-		OrthographicCamera m_Camera;
 
 	};
 

@@ -11,7 +11,6 @@ namespace Tituf
 	Application* Application::s_Instance = nullptr;
 	
 	Application::Application()
-		: m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		TF_CORE_ASSERT(!s_Instance); // Application already exists! 
 		s_Instance = this;
@@ -28,133 +27,7 @@ namespace Tituf
 		//TFWindow& window = TFWindow::Get();
 		std::cout << "Application created" << std::endl;
 
-		m_VertexArray = std::shared_ptr<VertexArray>(VertexArray::Create());
-
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f ,0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f ,0.8f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f ,0.2f, 1.0f
-		};
-
-		m_VertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
-		m_VertexBuffer->Bind();  
-
-		BufferLayout layout = {
-			{ShaderDataType::Float3, "a_Position"},
-			{ShaderDataType::Float4, "a_Color"},
-		};
-		m_VertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 		
-		unsigned int indices[] = {
-			0, 1, 2
-		};   
-
-		m_IndexBuffer = std::shared_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
-
-
-		float squareVertices[] = {
-			// position            // color
-			-0.75f, -0.75f, 0.0f,   1,0,0,1,
-			 0.75f, -0.75f, 0.0f,   0,1,0,1,
-			 0.75f,  0.75f, 0.0f,   0,0,1,1,
-			-0.75f,  0.75f, 0.0f,   1,1,0,1
-		};
-
-
-		m_SquareVB = std::shared_ptr<VertexBuffer>(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
-
-		BufferLayout squareVBLayout = {
-			{ShaderDataType::Float3, "a_Position"},
-			{ShaderDataType::Float4, "a_Color"}
-		};
-
-		m_SquareVB->SetLayout(squareVBLayout);
-		m_SquareVA = std::shared_ptr<VertexArray>(VertexArray::Create());
-		m_SquareVA->AddVertexBuffer(m_SquareVB);
-
-		unsigned int squareIndices[6] = {
-			0, 1, 2, 2, 3, 0
-		};
-
-		m_SquareIB = std::shared_ptr<IndexBuffer>(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_SquareVA->SetIndexBuffer(m_SquareIB);
-		 
-
-		std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-	
-			uniform mat4 u_ViewProjection;
-
-			out vec3 v_Position;			
-			out vec4 v_Color;			
-
-			void main()
-			{
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-				//gl_Position = vec4(a_Position, 1.0);
-			}  
-		)";
-
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-	
-			in vec3 v_Position;
-			in vec4 v_Color;
-
-			void main()
-			{
-				//color = vec4(v_Position * 0.5 + 0.5 , 1.0);
-				color = v_Color;
-			}  
-		)";
-
-		m_Shader = std::make_unique<Shader>(vertexSrc, fragmentSrc);
-
-		std::string blueShaderVertexSrc = R"(
-		#version 330 core
-    
-		layout(location = 0) in vec3 a_Position;
-		layout(location = 1) in vec4 a_Color;
-
-		uniform mat4 u_ViewProjection;
-
-		out vec3 v_Position;
-
-		void main() {
-			v_Position = a_Position;
-			gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-			//gl_Position = vec4(a_Position, 1.0);
-		}
-)";
-
-		std::string blueShaderFragmentSrc = R"(
-		#version 330 core
-
-		layout(location = 0) out vec4 color;
-
-		in vec3 v_Position;
-
-		void main()
-		{
-			float blue = 0.5 + v_Position.y * 0.5; // Blue changes with Y
-			float green = 0.2 + v_Position.x * 0.3; // small green variation with X
-			float red = 0.1;                        // small constant red
-			color = vec4(red, green, blue, 1.0);
-		}
-)";
-
-
-		m_BlueShader = std::make_unique<Shader>(blueShaderVertexSrc, blueShaderFragmentSrc);
-
 	}
 
 	Application::~Application() = default;
@@ -168,52 +41,38 @@ namespace Tituf
 		     
 		while (running)
 		{
+			float time = (float)GetTickCount64() / 1000.0f; // in secondes	
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			if (!m_Window.ProcessMessages())
 				break;
 
-
+			//Window
+			m_Window.GlMakeCurrent();
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);  
 
+			// Errors
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				std::cout << "GL ERROR: " << err << std::endl;
+			m_Window.SwapBuffers();
+			Sleep(16); // simple frame limiter
+			//
+			
+			//Imgui
 			m_Window.GlMakeCurrentImgui();
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
 			m_Window.SwapBuffersImgui();      // <--- swap buffers of the ImGui window
+			//
 
 
-			m_Window.GlMakeCurrent();
 
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-			RenderCommand::Clear();
 
-			//m_Camera.SetPosition({ 0.5f, 0.5f, 0.0f });
-			//m_Camera.SetRotation(15.0f);
-
-			Renderer::BeginScene(m_Camera);
-
-			Renderer::Submit(m_BlueShader, m_SquareVA);
-			Renderer::Submit(m_Shader, m_VertexArray);
-
-			Renderer::EndScene();
-			  
-
-			// Errors
-			GLenum err = glGetError();
-			if (err != GL_NO_ERROR)
-				std::cout << "GL ERROR: " << err << std::endl;
-			
-
-			//Input check
-			bool APressed = Input::IsKeyPressed(TF_KEY_TAB); // Example usage of Input
-			if (APressed)
-			{
-				TF_CORE_INFO("Key A is pressed");
-			}	 
-
-			m_Window.SwapBuffers();
-			Sleep(16); // simple frame limiter
 		}
 	}
 

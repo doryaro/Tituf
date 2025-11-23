@@ -7,6 +7,20 @@
 #include "Tituf/Layer.h"
 #include "Tituf/ImGui/ImGuiLayer.h"
 #include "Tituf/Log.h"	
+#include "Tituf/Input.h"
+#include "Tituf/Core/Timestep.h"
+
+// render
+#include "Tituf/Renderer/Renderer.h"
+#include "Tituf/Renderer/RenderCommand.h"
+
+#include "Tituf/Renderer/Buffer.h"
+#include "Tituf/Renderer/Shader.h"
+#include "Tituf/Renderer/VertexArray.h"
+
+#include "Tituf/Renderer/OrthographicCamera.h"
+//
+
 
   
 // --- Entry Point -----------------

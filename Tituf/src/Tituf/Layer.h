@@ -3,6 +3,7 @@
 #include "Tituf/Core.h"
 #include "Tituf/Event/Event.h"
 #include "../Window/TFWindow.h"
+#include "Tituf/Core/Timestep.h"
 
 namespace Tituf
 {
@@ -13,7 +14,7 @@ namespace Tituf
 		virtual ~Layer();
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 		inline const std::string& GetName() const { return m_DebugName; }
