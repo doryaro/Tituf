@@ -111,7 +111,7 @@ project "Sandbox"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/src/**.cpp"
 	}	  
 
 	includedirs
@@ -121,7 +121,6 @@ project "Sandbox"
 		"Tituf/src",
 		"%{wks.location}/vendor/glew/include",
 		"%{wks.location}/vendor/imgui",
-        "%{wks.location}/vendor/imgui/backends",
 		"Tituf/config"
 	}
 	libdirs

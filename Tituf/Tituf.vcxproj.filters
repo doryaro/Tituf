@@ -16,6 +16,9 @@
     <Filter Include="src\Tituf">
       <UniqueIdentifier>{88A9E7B3-F413-9C2A-3D52-4DD0A9FB797F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Tituf\Core">
+      <UniqueIdentifier>{E002D0B4-CCD0-C3BA-B564-34E1A1D19F1F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Tituf\Event">
       <UniqueIdentifier>{D930F84E-45BC-6513-4ECD-E807BAD7C113}</UniqueIdentifier>
     </Filter>
@@ -69,6 +72,9 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
@@ -80,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="src\Tituf\Core.h">
       <Filter>src\Tituf</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Core\Timestep.h">
+      <Filter>src\Tituf\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Tituf\EntryPoint.h">
       <Filter>src\Tituf</Filter>
@@ -112,6 +121,9 @@
       <Filter>src\Tituf</Filter>
     </ClInclude>
     <ClInclude Include="src\Tituf\Renderer\Buffer.h">
+      <Filter>src\Tituf\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tituf\Renderer\OrthographicCamera.h">
       <Filter>src\Tituf\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Tituf\Renderer\RenderCommand.h">
@@ -1395,8 +1407,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tituf\Renderer\OrthographicCamera.h" />
-    <ClInclude Include="src\Tituf\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp">
@@ -1429,6 +1439,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1451,6 +1464,9 @@
       <Filter>src\Tituf</Filter>
     </ClCompile>
     <ClCompile Include="src\Tituf\Renderer\Buffer.cpp">
+      <Filter>src\Tituf\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\OrthographicCamera.cpp">
       <Filter>src\Tituf\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Tituf\Renderer\RenderCommand.cpp">
@@ -1477,7 +1493,6 @@
     <ClCompile Include="src\tfpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tituf\Renderer\OrthographicCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\config.ini">

@@ -1,4 +1,5 @@
 #pragma once
+#include "memory.h"
 
 // CONFIG_PATH relative to the project root
 #define CONFIG_PATH PROJECT_ROOT "/Tituf" "/config/config.ini"
@@ -118,3 +119,14 @@
 #define TF_KEY_RIGHT_CONTROL 345
 #define TF_KEY_RIGHT_ALT     346
 #define TF_KEY_RIGHT_SUPER   347
+
+
+
+namespace Tituf
+{
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}

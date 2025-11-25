@@ -162,14 +162,14 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="config\Config.h" />
-    <ClInclude Include="src\Tituf\Core\Timestep.h" />
-    <ClInclude Include="src\Tituf\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Tituf.h" />
     <ClInclude Include="src\Tituf\Application.h" />
     <ClInclude Include="src\Tituf\Core.h" />
+    <ClInclude Include="src\Tituf\Core\Timestep.h" />
     <ClInclude Include="src\Tituf\EntryPoint.h" />
     <ClInclude Include="src\Tituf\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Tituf\Event\Event.h" />
@@ -181,6 +181,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClInclude Include="src\Tituf\LayerStack.h" />
     <ClInclude Include="src\Tituf\Log.h" />
     <ClInclude Include="src\Tituf\Renderer\Buffer.h" />
+    <ClInclude Include="src\Tituf\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Tituf\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Tituf\Renderer\Renderer.h" />
     <ClInclude Include="src\Tituf\Renderer\RendererAPI.h" />
@@ -618,9 +619,9 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="config\Config.cpp" />
-    <ClCompile Include="src\Tituf\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Tituf\Application.cpp" />
     <ClCompile Include="src\Tituf\ImGui\ImGuiLayer.cpp" />
@@ -629,6 +630,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="src\Tituf\LayerStack.cpp" />
     <ClCompile Include="src\Tituf\Log.cpp" />
     <ClCompile Include="src\Tituf\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Tituf\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Tituf\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Tituf\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Tituf\Renderer\RendererAPI.cpp" />

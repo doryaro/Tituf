@@ -15,7 +15,7 @@ namespace Tituf
 	{
 		s_RendererAPI->Clear();
 	}
-	void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+	void RenderCommand::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
 		s_RendererAPI->DrawIndexed(vertexArray);
 	}
