@@ -184,7 +184,9 @@ class ExampleLayer : public Tituf::Layer
 
 
 		m_TextureShader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
 		m_Texture = Tituf::Ref<Tituf::Texture2D>(Tituf::Texture2D::Create("assets/textures/AnimeTest.png"));
+		m_GokuLogo = Tituf::Ref<Tituf::Texture2D>(Tituf::Texture2D::Create("assets/textures/Goku.png"));
 
 		std::dynamic_pointer_cast<Tituf::OpenGLShader>(m_TextureShader)->Bind();
 		std::dynamic_pointer_cast<Tituf::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
@@ -274,10 +276,12 @@ class ExampleLayer : public Tituf::Layer
 		}	
 
 		m_Texture->Bind();
-
 		Tituf::Renderer::Submit(m_TextureShader	, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-		//Tituf::Renderer::Submit(m_Shader, m_VertexArray);
+		m_GokuLogo->Bind();
+		Tituf::Renderer::Submit(m_TextureShader, m_SquareVA,
+			glm::translate(glm::mat4(1.0f),glm::vec3(0.5f,0.5f,0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
+
 		   
 		Tituf::Renderer::EndScene();
 
@@ -300,6 +304,7 @@ private:
 
 	Tituf::Ref<Tituf::Shader> m_FlatColorShader, m_TextureShader;
 	Tituf::Ref<Tituf::Texture2D> m_Texture;
+	Tituf::Ref<Tituf::Texture2D> m_GokuLogo;
 	Tituf::Ref<Tituf::VertexArray> m_SquareVA; 
 	Tituf::Ref<Tituf::VertexBuffer> m_SquareVB;
 	Tituf::Ref<Tituf::IndexBuffer> m_SquareIB;

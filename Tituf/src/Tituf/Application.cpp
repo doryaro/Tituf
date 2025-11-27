@@ -21,6 +21,8 @@ namespace Tituf
 		
 		glViewport(0, 0, m_Window.GetData().Width, m_Window.GetData().Height);
 
+		Renderer::Init();
+
 		m_ImGuiLayer = new ImGuiLayer();	
 		PushOverlay(m_ImGuiLayer);
 		// Create the window singleton
