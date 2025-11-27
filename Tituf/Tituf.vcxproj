@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;PROJECT_ROOT="C:/Users/dorya/OneDrive/Desktop/Tituf";TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;vendor\stb_image;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -104,7 +104,7 @@ powershell -Command "Copy-Item -Path '../bin/Debug-windows-x86_64/Tituf/Tituf.li
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;PROJECT_ROOT="C:/Users/dorya/OneDrive/Desktop/Tituf";TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;vendor\stb_image;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -135,7 +135,7 @@ powershell -Command "Copy-Item -Path '../bin/Release-windows-x86_64/Tituf/Tituf.
       <PrecompiledHeaderFile>tfpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;PROJECT_ROOT="C:/Users/dorya/OneDrive/Desktop/Tituf";TF_PLATFORM_WINDOWS;TF_BUILD_DLL;TF_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\glew\include;..\vendor\imgui;..\vendor\imgui\backends;src;vendor\spdlog\include;vendor\glm;vendor\stb_image;config;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -165,6 +165,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Tituf.h" />
     <ClInclude Include="src\Tituf\Application.h" />
@@ -186,6 +187,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClInclude Include="src\Tituf\Renderer\Renderer.h" />
     <ClInclude Include="src\Tituf\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Tituf\Renderer\Shader.h" />
+    <ClInclude Include="src\Tituf\Renderer\Texture.h" />
     <ClInclude Include="src\Tituf\Renderer\VertexArray.h" />
     <ClInclude Include="src\Window\TFWindow.h" />
     <ClInclude Include="src\Window\WindowsInput.h" />
@@ -609,6 +611,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClInclude Include="vendor\glm\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp" />
@@ -622,6 +625,7 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Tituf\Application.cpp" />
     <ClCompile Include="src\Tituf\ImGui\ImGuiLayer.cpp" />
@@ -635,12 +639,14 @@ powershell -Command "Copy-Item -Path '../bin/Dist-windows-x86_64/Tituf/Tituf.lib
     <ClCompile Include="src\Tituf\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Tituf\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Tituf\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Tituf\Renderer\Texture.cpp" />
     <ClCompile Include="src\Tituf\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Window\TFWindow.cpp" />
     <ClCompile Include="src\Window\WindowsInput.cpp" />
     <ClCompile Include="src\tfpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\config.ini" />

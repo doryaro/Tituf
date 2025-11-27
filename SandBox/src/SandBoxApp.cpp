@@ -39,10 +39,10 @@ class ExampleLayer : public Tituf::Layer
 
 		float squareVertices[] = {
 			// position            // color
-			-0.5f, -0.5f, 0.0f,   1,0,0,1,
-			 0.5f, -0.5f, 0.0f,   0,1,0,1,
-			 0.5f,  0.5f, 0.0f,   0,0,1,1,
-			-0.5f,  0.5f, 0.0f,   1,1,0,1
+			-0.5f, -0.5f, 0.0f,   1,0,0,1, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f,   0,1,0,1, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,   0,0,1,1, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,   1,1,0,1, 0.0f, 1.0f
 		};
 
 
@@ -50,7 +50,8 @@ class ExampleLayer : public Tituf::Layer
 
 		Tituf::BufferLayout squareVBLayout = {
 			{Tituf::ShaderDataType::Float3, "a_Position"},
-			{Tituf::ShaderDataType::Float4, "a_Color"}
+			{Tituf::ShaderDataType::Float4, "a_Color"},
+			{Tituf::ShaderDataType::Float2, "a_TexCoord"}
 		};
 
 		m_SquareVB->SetLayout(squareVBLayout);
@@ -142,6 +143,53 @@ class ExampleLayer : public Tituf::Layer
 
 
 		m_FlatColorShader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create(flatShaderVertexSrc, flatShaderFragmentSrc));
+
+		////////////////////////
+		std::string textureShaderVertexSrc = R"(
+		#version 330 core
+    
+		layout(location = 0) in vec3 a_Position;
+		layout(location = 1) in vec4 a_Color;
+		layout(location = 2) in vec2 a_TexCoord;
+
+		uniform mat4 u_ViewProjection;
+		uniform mat4 u_Transform;
+
+		out vec3 v_Position;
+		out vec2 v_TexCoord;
+
+		void main() {
+			v_Position = a_Position;
+ 			v_TexCoord = a_TexCoord;
+			gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			//gl_Position = vec4(a_Position, 1.0);
+		}
+)";
+
+		std::string textureShaderFragmentSrc = R"(
+		#version 330 core
+
+		layout(location = 0) out vec4 color;
+
+		in vec3 v_Position;
+		in vec2 v_TexCoord;
+
+		uniform sampler2D u_Texture;	     	
+
+		void main()
+		{
+			color = texture(u_Texture, v_TexCoord);	
+		}
+)"; 
+
+
+		m_TextureShader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		m_Texture = Tituf::Ref<Tituf::Texture2D>(Tituf::Texture2D::Create("assets/textures/AnimeTest.png"));
+
+		std::dynamic_pointer_cast<Tituf::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Tituf::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+
+
 	}
 	virtual ~ExampleLayer() {}
 	virtual void OnAttach() override
@@ -225,7 +273,11 @@ class ExampleLayer : public Tituf::Layer
 			}
 		}	
 
-		Tituf::Renderer::Submit(m_Shader, m_VertexArray);
+		m_Texture->Bind();
+
+		Tituf::Renderer::Submit(m_TextureShader	, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		//Tituf::Renderer::Submit(m_Shader, m_VertexArray);
 		   
 		Tituf::Renderer::EndScene();
 
@@ -246,8 +298,9 @@ private:
 	Tituf::Ref<Tituf::IndexBuffer> m_IndexBuffer;
 	Tituf::Ref<Tituf::VertexArray> m_VertexArray;
 
-	Tituf::Ref<Tituf::Shader> m_FlatColorShader;
-	Tituf::Ref<Tituf::VertexArray> m_SquareVA;
+	Tituf::Ref<Tituf::Shader> m_FlatColorShader, m_TextureShader;
+	Tituf::Ref<Tituf::Texture2D> m_Texture;
+	Tituf::Ref<Tituf::VertexArray> m_SquareVA; 
 	Tituf::Ref<Tituf::VertexBuffer> m_SquareVB;
 	Tituf::Ref<Tituf::IndexBuffer> m_SquareIB;
 

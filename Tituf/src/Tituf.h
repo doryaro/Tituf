@@ -16,6 +16,7 @@
 
 #include "Tituf/Renderer/Buffer.h"
 #include "Tituf/Renderer/Shader.h"
+#include "Tituf/Renderer/Texture.h"
 #include "Tituf/Renderer/VertexArray.h"
 
 #include "Tituf/Renderer/OrthographicCamera.h"

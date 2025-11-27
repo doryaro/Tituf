@@ -30,6 +30,10 @@ project "Tituf"
 		"%{prj.name}/vendor/glm/**.hpp",
 		"%{prj.name}/vendor/glm/**.inl",
 
+		-- stb_image
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+
 		-- ImGui core + backend files
         "%{wks.location}/vendor/imgui/*.cpp",
         "%{wks.location}/vendor/imgui/backends/**.cpp",
@@ -54,6 +58,7 @@ project "Tituf"
 		"%{prj.name}/src",    
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/vendor/glm",
+		"%{prj.name}/vendor/stb_image",
 		"%{prj.name}/config"
 	}
 
