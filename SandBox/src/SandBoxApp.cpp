@@ -18,27 +18,7 @@ class ExampleLayer : public Tituf::Layer
 		Tituf::MeshLoader loader;
 		m_Meshes = loader.LoadModel("assets/models/fbx/Cube/RubixCube.fbx");
 
-		//Assimp::Importer importer;
-		//// Replace with path to a simple .fbx or .obj file
-		//const aiScene* scene = importer.ReadFile("assets/models/fbx/Cube/RubixCube.fbx",
-		//	aiProcess_Triangulate | aiProcess_FlipUVs);
-
-		//if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		//	std::cerr << "Error loading model: " << importer.GetErrorString() << std::endl;
-		//	return;
-		//}
-		//   
-		//std::cout << "Model loaded successfully!\n";
-		//std::cout << "Number of meshes: " << scene->mNumMeshes << std::endl;
-
-		//for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
-		//	aiMesh* mesh = scene->mMeshes[i];
-		//	std::cout << "Mesh " << i << " has " << mesh->mNumVertices << " vertices" << std::endl;
-		//	m_Meshes.push_back(LoadMesh(mesh));
-		//}
-
 		m_VertexArray = Tituf::Ref<Tituf::VertexArray>(Tituf::VertexArray::Create());
-
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f ,0.8f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f ,0.8f, 1.0f,
@@ -321,10 +301,6 @@ private:
 	float m_CameraYaw = 0.0f;    // rotation around Y axis
 	float m_CameraPitch = 0.0f;  // optional: for looking up/down
   
-
-
-
-
 	glm::vec3 m_Camera2DPosition;
 	float m_Camera2DMovementSpeed = 3.0f;
 
