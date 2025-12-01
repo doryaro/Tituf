@@ -41,18 +41,21 @@ project "Tituf"
 
 	libdirs
 	{
-	    "%{wks.location}/vendor/glew/lib"  -- folder containing .lib files
+	    "%{wks.location}/vendor/glew/lib",  -- folder containing .lib files
+	    "%{wks.location}/vendor/assimp/lib"  -- folder containing .lib files
 	}
 	links
 	{
 		"opengl32", 
-		"glew32s"   
-	}
+		"glew32s",
+		"assimp-vc143-mt"
+	} 
 
 	-- include directories
 	includedirs 
 	{	  
 		"%{wks.location}/vendor/glew/include",
+		"%{wks.location}/vendor/assimp/include",
         "%{wks.location}/vendor/imgui",
         "%{wks.location}/vendor/imgui/backends",
 		"%{prj.name}/src",    
@@ -125,19 +128,22 @@ project "Sandbox"
 		"Tituf/vendor/glm",
 		"Tituf/src",
 		"%{wks.location}/vendor/glew/include",
+		"%{wks.location}/vendor/assimp/include",
 		"%{wks.location}/vendor/imgui",
 		"Tituf/config"
 	}
 	libdirs
 	{
-	    "%{wks.location}/vendor/glew/lib"  -- folder containing .lib files
+	    "%{wks.location}/vendor/glew/lib",  -- folder containing .lib files
+	    "%{wks.location}/vendor/assimp/lib"  -- folder containing .lib files
 	}
 
 	links
 	{
 		"Tituf",
 		"opengl32", 
-		"glew32s"  
+		"glew32s",
+		"assimp-vc143-mt"
 	}  
 
 	filter "system:windows"
@@ -148,6 +154,12 @@ project "Sandbox"
 		{ 
 			"TF_PLATFORM_WINDOWS",
 			"GLEW_STATIC"
+		}
+		
+		-- copy DLLs to output folder
+		postbuildcommands
+		{
+			"powershell -Command \"Copy-Item -Path '%{wks.location}/vendor/assimp/bin/assimp-vc143-mt.dll' -Destination '%{cfg.targetdir}' -Force\""
 		}
 
 	filter {}

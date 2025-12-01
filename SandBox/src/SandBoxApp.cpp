@@ -3,14 +3,40 @@
 #include <Tituf.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Platform/OpenGL/OpenGLShader.h"
+#include <glm/glm.hpp>
 #include "glm/gtc/type_ptr.hpp"
 #include "imgui.h"
+
+
 
 class ExampleLayer : public Tituf::Layer
 {
 	public:
-		ExampleLayer() : Layer("ExampleLayer"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_SquarePosition(0.0f)
+		ExampleLayer() : Layer("ExampleLayer"), m_Camera(glm::radians(45.0f), aspect, 0.1f, 100.0f) , m_SquarePosition(0.0f)
 	{
+
+		Tituf::MeshLoader loader;
+		m_Meshes = loader.LoadModel("assets/models/fbx/Cube/RubixCube.fbx");
+
+		//Assimp::Importer importer;
+		//// Replace with path to a simple .fbx or .obj file
+		//const aiScene* scene = importer.ReadFile("assets/models/fbx/Cube/RubixCube.fbx",
+		//	aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		//if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+		//	std::cerr << "Error loading model: " << importer.GetErrorString() << std::endl;
+		//	return;
+		//}
+		//   
+		//std::cout << "Model loaded successfully!\n";
+		//std::cout << "Number of meshes: " << scene->mNumMeshes << std::endl;
+
+		//for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
+		//	aiMesh* mesh = scene->mMeshes[i];
+		//	std::cout << "Mesh " << i << " has " << mesh->mNumVertices << " vertices" << std::endl;
+		//	m_Meshes.push_back(LoadMesh(mesh));
+		//}
+
 		m_VertexArray = Tituf::Ref<Tituf::VertexArray>(Tituf::VertexArray::Create());
 
 		float vertices[3 * 7] = {
@@ -102,7 +128,7 @@ class ExampleLayer : public Tituf::Layer
 			}  
 		)";
 
-		m_Shader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc));
 
 		std::string flatShaderVertexSrc = R"(
 		#version 330 core
@@ -141,59 +167,65 @@ class ExampleLayer : public Tituf::Layer
 		}
 )";
 
+		m_FlatColorShader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create("FlatColor", flatShaderVertexSrc, flatShaderFragmentSrc));
 
-		m_FlatColorShader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create(flatShaderVertexSrc, flatShaderFragmentSrc));
+		Tituf::Ref<Tituf::Shader> textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
-		////////////////////////
-		std::string textureShaderVertexSrc = R"(
-		#version 330 core
-    
-		layout(location = 0) in vec3 a_Position;
-		layout(location = 1) in vec4 a_Color;
-		layout(location = 2) in vec2 a_TexCoord;
-
-		uniform mat4 u_ViewProjection;
-		uniform mat4 u_Transform;
-
-		out vec3 v_Position;
-		out vec2 v_TexCoord;
-
-		void main() {
-			v_Position = a_Position;
- 			v_TexCoord = a_TexCoord;
-			gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			//gl_Position = vec4(a_Position, 1.0);
-		}
-)";
-
-		std::string textureShaderFragmentSrc = R"(
-		#version 330 core
-
-		layout(location = 0) out vec4 color;
-
-		in vec3 v_Position;
-		in vec2 v_TexCoord;
-
-		uniform sampler2D u_Texture;	     	
-
-		void main()
-		{
-			color = texture(u_Texture, v_TexCoord);	
-		}
-)"; 
-
-
-		m_TextureShader = Tituf::Ref<Tituf::Shader>(Tituf::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
-
+		Tituf::Ref<Tituf::Shader> CubeShader = m_ShaderLibrary.Load("assets/shaders/Cube.glsl");
+		        
 		m_Texture = Tituf::Ref<Tituf::Texture2D>(Tituf::Texture2D::Create("assets/textures/AnimeTest.png"));
 		m_GokuLogo = Tituf::Ref<Tituf::Texture2D>(Tituf::Texture2D::Create("assets/textures/Goku.png"));
 
-		std::dynamic_pointer_cast<Tituf::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Tituf::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 
+		std::dynamic_pointer_cast<Tituf::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Tituf::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 
 	}
 	virtual ~ExampleLayer() {}
+
+
+	void CameraMovement(Tituf::Timestep ts)
+	{
+		// --- Camera movement ---
+		glm::vec3 camMove(0.0f);
+
+		if (Tituf::Input::IsKeyPressed(TF_KEY_W))
+			camMove.z -= 1.0f; // forward
+		if (Tituf::Input::IsKeyPressed(TF_KEY_S))
+			camMove.z += 1.0f; // backward
+		if (Tituf::Input::IsKeyPressed(TF_KEY_A))
+			camMove.x -= 1.0f; // left
+		if (Tituf::Input::IsKeyPressed(TF_KEY_D))
+			camMove.x += 1.0f; // right
+		if (Tituf::Input::IsKeyPressed(TF_KEY_DOWN))
+			camMove.y -= 1.0f; // down
+		if (Tituf::Input::IsKeyPressed(TF_KEY_UP))
+			camMove.y += 1.0f; // up
+
+		// Rotation
+		if (Tituf::Input::IsKeyPressed(TF_KEY_LEFT))
+			m_CameraYaw -= m_CameraRotationSpeed * ts.GetSecondes();
+		if (Tituf::Input::IsKeyPressed(TF_KEY_RIGHT))
+			m_CameraYaw += m_CameraRotationSpeed * ts.GetSecondes();
+
+		// --- Compute forward and right vectors ---
+		glm::vec3 forward;
+		forward.x = sin(glm::radians(m_CameraYaw));
+		forward.y = 0.0f;
+		forward.z = -cos(glm::radians(m_CameraYaw));
+		forward = glm::normalize(forward);
+
+		glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+		// --- Apply movement ---
+		m_CameraPosition += forward * camMove.z * m_CameraMovementSpeed * ts.GetSecondes();
+		m_CameraPosition += right * camMove.x * m_CameraMovementSpeed * ts.GetSecondes();
+		m_CameraPosition += glm::vec3(0.0f, 1.0f, 0.0f) * camMove.y * m_CameraMovementSpeed * ts.GetSecondes();
+
+		// --- Update camera ---
+		m_Camera.SetPosition(m_CameraPosition);
+		m_Camera.LookAt(m_CameraPosition + forward);
+	}
 	virtual void OnAttach() override
 	{   
 		TF_INFO("ExampleLayer attached");
@@ -204,60 +236,25 @@ class ExampleLayer : public Tituf::Layer
 	}
 	virtual void OnUpdate(Tituf::Timestep ts) override
 	{
-		//TF_TRACE("Delta time : {0} , secondes", ts.GetSecondes());
-		if (Tituf::Input::IsKeyPressed(TF_KEY_LEFT))
-		{
-			m_CameraPosition.x -= m_CameraMovementSpeed * ts;
-		}
-		else if (Tituf::Input::IsKeyPressed(TF_KEY_RIGHT))
-		{
-			m_CameraPosition.x += m_CameraMovementSpeed * ts;
-		}
-
-		if (Tituf::Input::IsKeyPressed(TF_KEY_UP))
-		{
-			m_CameraPosition.y += m_CameraMovementSpeed * ts;
-		}
-		else if (Tituf::Input::IsKeyPressed(TF_KEY_DOWN))
-		{
-			m_CameraPosition.y -= m_CameraMovementSpeed * ts;
-		}
-
-		if (Tituf::Input::IsKeyPressed(TF_KEY_Q))
-		{
-			m_CameraRotation += m_CameraRotationSpeed * ts;
-		}
-		else if (Tituf::Input::IsKeyPressed(TF_KEY_E))
-		{
-			m_CameraRotation -= m_CameraRotationSpeed * ts;
-		}
-		  
-
-		if (Tituf::Input::IsKeyPressed(TF_KEY_J))
-		{
-			m_SquarePosition.x -= m_SquareMovementSpeed * ts;
-		}
-		else if (Tituf::Input::IsKeyPressed(TF_KEY_L))
-		{
-			m_SquarePosition.x += m_SquareMovementSpeed * ts;
-		}
-
-		if (Tituf::Input::IsKeyPressed(TF_KEY_I))
-		{ 
-			m_SquarePosition.y += m_SquareMovementSpeed * ts;
-		}
-		else if (Tituf::Input::IsKeyPressed(TF_KEY_K))
-		{ 
-			m_SquarePosition.y -= m_SquareMovementSpeed * ts;
-		}
-
 		Tituf::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Tituf::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
+		CameraMovement(ts);
 
-		Tituf::Renderer::BeginScene(m_Camera);
+		Tituf::Renderer::BeginScene(m_Camera);  
+
+		auto CubeShader = m_ShaderLibrary.Get("Cube");
+		auto glCube = std::dynamic_pointer_cast<Tituf::OpenGLShader>(CubeShader);
+		   
+		glm::mat4 CubeTransform = glm::scale(glm::mat4(1.0f), glm::vec3(0.11f));
+		glCube->Bind();
+		glCube->UploadUniformFloat3("u_Color", m_SquareColor);
+		   
+
+		for (auto& meshVA : m_Meshes)
+		{ 
+			Tituf::Renderer::Submit(CubeShader, meshVA, CubeTransform);
+		}
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -271,16 +268,18 @@ class ExampleLayer : public Tituf::Layer
 
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos + m_SquarePosition) * scale;
-				Tituf::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+				//Tituf::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
 			}
 		}	
 
 		m_Texture->Bind();
-		Tituf::Renderer::Submit(m_TextureShader	, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
+		Tituf::Ref<Tituf::Shader> textureShader = m_ShaderLibrary.Get("Texture");
+		//Tituf::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		 
 		m_GokuLogo->Bind();
-		Tituf::Renderer::Submit(m_TextureShader, m_SquareVA,
-			glm::translate(glm::mat4(1.0f),glm::vec3(0.5f,0.5f,0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
+		//Tituf::Renderer::Submit(textureShader, m_SquareVA,
+			//glm::translate(glm::mat4(1.0f),glm::vec3(0.5f,0.5f,0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
 
 		   
 		Tituf::Renderer::EndScene();
@@ -296,25 +295,41 @@ class ExampleLayer : public Tituf::Layer
 	virtual void OnEvent(Tituf::Event& event) override
 	{
 	}
+	
 private:
+	Tituf::ShaderLibrary m_ShaderLibrary;
 	Tituf::Ref<Tituf::Shader> m_Shader;
 	Tituf::Ref<Tituf::VertexBuffer> m_VertexBuffer;
 	Tituf::Ref<Tituf::IndexBuffer> m_IndexBuffer;
 	Tituf::Ref<Tituf::VertexArray> m_VertexArray;
 
-	Tituf::Ref<Tituf::Shader> m_FlatColorShader, m_TextureShader;
+	Tituf::Ref<Tituf::Shader> m_FlatColorShader;
 	Tituf::Ref<Tituf::Texture2D> m_Texture;
 	Tituf::Ref<Tituf::Texture2D> m_GokuLogo;
 	Tituf::Ref<Tituf::VertexArray> m_SquareVA; 
 	Tituf::Ref<Tituf::VertexBuffer> m_SquareVB;
 	Tituf::Ref<Tituf::IndexBuffer> m_SquareIB;
+	std::vector<Tituf::Ref<Tituf::VertexArray>> m_Meshes;
 
-	Tituf::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
+	float aspect = 1180.0f / 680.0f; // your viewport size
+
+	Tituf::PerspectiveCamera m_Camera;
+	glm::vec3 m_CameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
 	float m_CameraMovementSpeed = 3.0f;
-
+	float m_CameraRotationSpeed = 60.0f;
 	float m_CameraRotation = 0.0f;
-	float m_CameraRotationSpeed = 90.0f;
+	float m_CameraYaw = 0.0f;    // rotation around Y axis
+	float m_CameraPitch = 0.0f;  // optional: for looking up/down
+  
+
+
+
+
+	glm::vec3 m_Camera2DPosition;
+	float m_Camera2DMovementSpeed = 3.0f;
+
+	float m_Camera2DRotation = 0.0f;
+	float m_Camera2DRotationSpeed = 90.0f;
 
 	glm::vec3 m_SquarePosition;
 	float m_SquareMovementSpeed = 1.0f;
@@ -334,13 +349,11 @@ public:
 		PushLayer(new ExampleLayer());
 	};
 	~SandBoxApp() {};   
-
+	void CameraMovement();
 };
  
 Tituf::Application* Tituf::CreateApplication()
 {
 	return new SandBoxApp();
 }	
-
-
 

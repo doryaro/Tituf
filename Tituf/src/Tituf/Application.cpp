@@ -43,6 +43,8 @@ namespace Tituf
 		     
 		while (running)
 		{
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			float time = (float)GetTickCount64() / 1000.0f; // in secondes	
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;

@@ -1419,6 +1419,8 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tituf\Renderer\PerspectiveCamera.h" />
+    <ClInclude Include="src\Tituf\Renderer\MeshLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\imgui\backends\imgui_impl_opengl3.cpp">
@@ -1514,6 +1516,8 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tituf\Renderer\PerspectiveCamera.cpp" />
+    <ClCompile Include="src\Tituf\Renderer\MeshLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config\config.ini">
